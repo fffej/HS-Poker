@@ -93,7 +93,7 @@ contiguousValues xs | length uniqValues < 5 = False
                     | highest == Ace  && aceCondition = True
                     | otherwise = False
   where
-    uniqValues = nub $ sort $ map getValue xs 
+    uniqValues = nub $ map getValue xs 
     lowest = head uniqValues
     highest = last uniqValues
     aceCondition = lowest == Two && (last (init uniqValues)) == Five
