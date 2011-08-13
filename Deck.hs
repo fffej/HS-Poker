@@ -104,6 +104,9 @@ flush a b c d e | allSameSuit cards = Just $ Flush (maxValue cards)
                 | otherwise = Nothing
   where
     cards = [a,b,c,d,e]
+    
+straight :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
+straight _ _ _ _ _= Nothing -- TODO
 
 createOrderedDeck :: Deck
 createOrderedDeck = Deck [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
