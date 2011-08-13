@@ -138,10 +138,14 @@ twoPair a b c d e  = Nothing  -- TODO
     groupedCards = groupedValues cards
 
 onePair :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-onePair a b c d e = Nothing 
+onePair a b c d e | length groupedCards /= 4 = Nothing 
+                  | length (last groupedCards) /= 3 = Nothing
+                  | otherwise = Just $ OnePair maxValue k1 k2 k3
   where
     cards = [a,b,c,d,e]
     groupedCards = groupedValues cards
+    (k1:k2:k3:[]) = sort (map getValue (map head $ init groupedCards))
+    maxValue = getValue $ head (last groupedCards)
 
 highCard :: Card -> Card -> Card -> Card -> Card -> BestHand
 highCard a b c d e  = HighCard av bv cv dv ev
