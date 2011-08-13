@@ -168,7 +168,7 @@ onePair (Hand (a,b,c,d,e)) | length groupedCards /= 4 = Nothing
   where
     cards = [a,b,c,d,e]
     groupedCards = groupedValues cards
-    (k1:k2:k3:[]) = sort (map getValue (map head $ init groupedCards))
+    (k1:k2:k3:[]) = (map getValue (map head $ init groupedCards))
     maxValue = getValue $ head (last groupedCards)
 
 highCard :: Hand -> BestHand
