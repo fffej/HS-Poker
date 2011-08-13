@@ -79,9 +79,9 @@ getBestHand h = result
     results = mapMaybe (\x -> x h) fs
     result = head (results ++ [highCard h])
 
-allSameSuit :: [Card] -> Bool
-allSameSuit [] = True
-allSameSuit (x:xs) = all (\c -> getSuit x == getSuit c) xs
+allSameSuit :: Hand -> Bool
+allSameSuit (Hand (a,b,c,d,e)) = getSuit a == getSuit b && getSuit b == getSuit c &&
+                                 getSuit c == getSuit d && getSuit d == getSuit e
   
 contiguousValues :: [Card] -> Bool
 contiguousValues xs | length uniqValues < 5 = False
@@ -104,11 +104,10 @@ maxValueInStraight cards | isStraightWithLowAce cards = last $ init sortedValues
           isStraightWithLowAce cards = contiguousValues cards && Ace `elem` sortedValues && Two `elem` sortedValues
 
 straightFlush :: Hand -> Maybe BestHand
-straightFlush h@(Hand (a,b,c,d,e)) | allSameSuit cards && isJust isStraight = Just $ StraightFlush v
-                                   | otherwise = Nothing
+straightFlush hand | allSameSuit hand && isJust isStraight = Just $ StraightFlush v
+                   | otherwise = Nothing
   where
-    cards = [a,b,c,d,e]
-    isStraight = straight h
+    isStraight = straight hand
     (Straight v) = fromJust isStraight
     
 
@@ -133,10 +132,8 @@ fullHouse (Hand (a,b,c,d,e)) | length groupedCards /= 2 = Nothing
     cards = [a,b,c,d,e]
     
 flush :: Hand -> Maybe BestHand
-flush (Hand (a,b,c,d,e)) | allSameSuit cards = Just $ Flush (maxValue cards)
-                         | otherwise = Nothing
-  where
-    cards = [a,b,c,d,e]
+flush h@(Hand (a,b,c,d,e)) | allSameSuit h = Just $ Flush (getValue e)
+                           | otherwise = Nothing
     
 straight :: Hand -> Maybe BestHand
 straight (Hand (a,b,c,d,e)) | contiguousValues cards = Just $ Straight (maxValueInStraight cards)
