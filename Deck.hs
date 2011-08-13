@@ -45,7 +45,7 @@ data Deck = Deck CardVector deriving Show
 getCard :: Deck -> Int -> Card
 getCard (Deck xs) n = xs V.! n
 
-data Hand = Hand [Card]
+data Hand = Hand (Card,Card,Card,Card,Card) deriving Show
 
 data BestHand = StraightFlush Value -- highest card
               | FourOfAKind Value Value -- four of a kind, plus kicker
@@ -63,13 +63,13 @@ isStraightFlush (StraightFlush v) x | v == x = True
                                     | otherwise = False
 isStraightFlush _ _ = False
                          
-getBestHand :: Card -> Card -> Card -> Card -> Card -> BestHand
-getBestHand a b c d e = result
+getBestHand :: Hand -> BestHand
+getBestHand h = result
   where
     fs = [straightFlush, fourOfAKind, fullHouse, flush, straight, threeOfAKind, twoPairs, onePair]
     results :: [BestHand]
-    results = mapMaybe (\x -> x a b c d e) fs
-    result = head (results ++ [(highCard a b c d e)])
+    results = mapMaybe (\x -> x h) fs
+    result = head (results ++ [highCard h])
 
 allSameSuit :: [Card] -> Bool
 allSameSuit [] = True
@@ -95,12 +95,12 @@ maxValueInStraight cards | isStraightWithLowAce cards = last $ init sortedValues
     where sortedValues = sort $ map getValue cards
           isStraightWithLowAce cards = contiguousValues cards && Ace `elem` sortedValues && Two `elem` sortedValues
 
-straightFlush :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-straightFlush a b c d e | allSameSuit cards && isJust isStraight = Just $ StraightFlush v
-                        | otherwise = Nothing
+straightFlush :: Hand -> Maybe BestHand
+straightFlush h@(Hand (a,b,c,d,e)) | allSameSuit cards && isJust isStraight = Just $ StraightFlush v
+                                   | otherwise = Nothing
   where
     cards = [a,b,c,d,e]
-    isStraight = straight a b c d e
+    isStraight = straight h
     (Straight v) = fromJust isStraight
     
 
@@ -108,66 +108,66 @@ straightFlush a b c d e | allSameSuit cards && isJust isStraight = Just $ Straig
 groupedValues :: [Card] -> [[Card]]
 groupedValues cards = sortBy (comparing length) $ groupBy (\x y -> getValue x == getValue y) $ sortBy (comparing getValue) cards
 
-fourOfAKind :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-fourOfAKind a b c d e | length groupedCards /= 2 = Nothing 
-                      | length (head groupedCards) /= 1 = Nothing
-                      | otherwise = Just $ FourOfAKind (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
+fourOfAKind :: Hand -> Maybe BestHand
+fourOfAKind (Hand (a,b,c,d,e)) | length groupedCards /= 2 = Nothing 
+                               | length (head groupedCards) /= 1 = Nothing
+                               | otherwise = Just $ FourOfAKind (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
   where
     groupedCards = groupedValues cards
     cards = [a,b,c,d,e]
 
-fullHouse :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-fullHouse a b c d e | length groupedCards /= 2 = Nothing 
-                      | length (head groupedCards) /= 2 = Nothing
+fullHouse :: Hand -> Maybe BestHand
+fullHouse (Hand (a,b,c,d,e)) | length groupedCards /= 2 = Nothing 
+                             | length (head groupedCards) /= 2 = Nothing
                       | otherwise = Just $ FullHouse (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
   where
     groupedCards = groupedValues cards
     cards = [a,b,c,d,e]
     
-flush :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-flush a b c d e | allSameSuit cards = Just $ Flush (maxValue cards)
-                | otherwise = Nothing
+flush :: Hand -> Maybe BestHand
+flush (Hand (a,b,c,d,e)) | allSameSuit cards = Just $ Flush (maxValue cards)
+                         | otherwise = Nothing
   where
     cards = [a,b,c,d,e]
     
-straight :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-straight a b c d e | contiguousValues cards = Just $ Straight (maxValueInStraight cards)
-                   | otherwise = Nothing
+straight :: Hand -> Maybe BestHand
+straight (Hand (a,b,c,d,e)) | contiguousValues cards = Just $ Straight (maxValueInStraight cards)
+                            | otherwise = Nothing
   where
     cards = [a,b,c,d,e]
 
 
-threeOfAKind :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-threeOfAKind a b c d e  | length groupedCards /= 3 = Nothing  
-                        | length (last groupedCards) /= 3 = Nothing
-                        | otherwise = Just $ ThreeOfAKind threeValue maxKickerVal minKickerVal
+threeOfAKind :: Hand -> Maybe BestHand
+threeOfAKind (Hand (a,b,c,d,e)) | length groupedCards /= 3 = Nothing  
+                                | length (last groupedCards) /= 3 = Nothing
+                                | otherwise = Just $ ThreeOfAKind threeValue maxKickerVal minKickerVal
   where
     cards = [a,b,c,d,e]
     threeValue = getValue $ head (last groupedCards)
     (minKickerVal:maxKickerVal:[]) = sort (map getValue ((head $ head groupedCards) : (head $ tail groupedCards)))
     groupedCards = groupedValues cards
 
-twoPairs :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-twoPairs a b c d e  | length groupedCards /= 3 = Nothing  
-                    | length (last groupedCards) /= 2 = Nothing
-                    | otherwise = Just $ TwoPairs highPair lowPair kicker
+twoPairs :: Hand -> Maybe BestHand
+twoPairs (Hand (a,b,c,d,e)) | length groupedCards /= 3 = Nothing  
+                            | length (last groupedCards) /= 2 = Nothing
+                            | otherwise = Just $ TwoPairs highPair lowPair kicker
   where
     cards = [a,b,c,d,e]
     [kicker,lowPair,highPair] = map (getValue . head) groupedCards
     groupedCards = groupedValues cards
 
-onePair :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-onePair a b c d e | length groupedCards /= 4 = Nothing 
-                  | length (last groupedCards) /= 2 = Nothing
-                  | otherwise = Just $ OnePair maxValue k3 k2 k1
+onePair :: Hand -> Maybe BestHand
+onePair (Hand (a,b,c,d,e)) | length groupedCards /= 4 = Nothing 
+                           | length (last groupedCards) /= 2 = Nothing
+                           | otherwise = Just $ OnePair maxValue k3 k2 k1
   where
     cards = [a,b,c,d,e]
     groupedCards = groupedValues cards
     (k1:k2:k3:[]) = sort (map getValue (map head $ init groupedCards))
     maxValue = getValue $ head (last groupedCards)
 
-highCard :: Card -> Card -> Card -> Card -> Card -> BestHand
-highCard a b c d e  = HighCard av bv cv dv ev
+highCard :: Hand -> BestHand
+highCard (Hand (a,b,c,d,e))  = HighCard av bv cv dv ev
   where
     cards = sortBy (comparing getValue) [a,b,c,d,e]
     (av:bv:cv:dv:ev:[]) = map getValue cards
@@ -175,11 +175,12 @@ highCard a b c d e  = HighCard av bv cv dv ev
 createOrderedDeck :: Deck
 createOrderedDeck = Deck $ V.fromList [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
 
-analyseDeck :: Deck -> [(Int,Int,Int,Int,Int)] -> [((Card,Card,Card,Card,Card),BestHand)]
+analyseDeck :: Deck -> [(Int,Int,Int,Int,Int)] -> [(Hand,BestHand)]
 analyseDeck d choices = map (getFiveCardsHand d) choices
 
-getFiveCardsHand :: Deck -> (Int,Int,Int,Int,Int) -> ((Card,Card,Card,Card,Card),BestHand)
-getFiveCardsHand dk (a,b,c,d,e) = ((a',b',c',d',e'),getBestHand a' b' c' d' e')
+getFiveCardsHand :: Deck -> (Int,Int,Int,Int,Int) -> (Hand,BestHand)
+getFiveCardsHand dk (a,b,c,d,e) = (cards,getBestHand cards)
   where
+    cards = Hand (a',b',c',d',e')
     [a',b',c',d',e']  = map (getCard dk) [a,b,c,d,e]
-   
+  
