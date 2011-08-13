@@ -61,14 +61,14 @@ allSameSuit (x:xs) = all (\c -> getSuit x == getSuit c) xs
   
 contiguousValues :: [Card] -> Bool
 contiguousValues xs | length uniqValues < 5 = False
-                    | (highest - lowest) == 4 = True
-                    | highest == 14 && aceCondition = True
+                    | (uniqValues == (enumFromTo lowest highest)) = True
+                    | highest == Ace  && aceCondition = True
                     | otherwise = False
   where
     uniqValues = nub $ sort $ map getValue xs 
-    lowest = fromEnum $ head uniqValues
-    highest = fromEnum $ last uniqValues
-    aceCondition = lowest == 2 && (fromEnum $ last (init uniqValues)) == 5
+    lowest = head uniqValues
+    highest = last uniqValues
+    aceCondition = lowest == Two && (last (init uniqValues)) == Five
 
 maxValue :: [Card] -> Value
 maxValue = maximum . (map getValue)
@@ -80,10 +80,13 @@ maxValueInStraight cards | isStraightWithLowAce cards = last $ init sortedValues
           isStraightWithLowAce cards = contiguousValues cards && Ace `elem` sortedValues && Two `elem` sortedValues
 
 straightFlush :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-straightFlush a b c d e | allSameSuit cards && contiguousValues cards = Just $ StraightFlush (maxValueInStraight cards)
+straightFlush a b c d e | allSameSuit cards && isJust isStraight = Just $ StraightFlush v
                         | otherwise = Nothing
   where
     cards = [a,b,c,d,e]
+    isStraight = straight a b c d e
+    (Straight v) = fromJust isStraight
+    
 
 -- TODO express that the length of this resultant list is >=2 && <=5 (at least when supplied with five cards!)
 groupedValues :: [Card] -> [[Card]]
@@ -112,7 +115,11 @@ flush a b c d e | allSameSuit cards = Just $ Flush (maxValue cards)
     cards = [a,b,c,d,e]
     
 straight :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-straight _ _ _ _ _= Nothing -- TODO
+straight a b c d e | contiguousValues cards = Just $ Straight (maxValueInStraight cards)
+                   | otherwise = Nothing
+  where
+    cards = [a,b,c,d,e]
+
 
 threeOfAKind :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
 threeOfAKind a b c d e  | length groupedCards /= 3 = Nothing  

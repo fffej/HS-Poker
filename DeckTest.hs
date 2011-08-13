@@ -13,7 +13,7 @@ straightFlushHand = [cc h s | s <- [2,3,4,5,6]]
 straightFlushHandAce = [cc h s | s <- [14,2,3,4,5]]
 fourOfAKindHand = [cc h 7, cc s 7, cc s 14, cc c 7, cc d 7]
 fullHouseHand = [cc h 7, cc d 7, cc s 7, cc c 5, cc d 5]
-straightHand = [cc h 2, cc h 3, cc h 5, cc h 7, cc h 9]
+straightHand = [cc h 2, cc d 3, cc h 5, cc h 6, cc h 4]
 straightHandAce = [cc h 14, cc h 2, cc h 4, cc h 5, cc h 3]
 threeOfAKindHand = [cc h 14, cc d 14, cc s 14, cc h 9, cc h 5]
 
@@ -58,7 +58,7 @@ testFullHouseNegative = TestCase $ assertEqual
                         "Not full house" Nothing (fullHouseFromList flushHand)
                
 testStraightHand = TestCase $ assertEqual
-                   "Straight hand" (Just $ Straight Nine) (straightFromList straightHand)
+                   "Straight hand" (Just $ Straight Six) (straightFromList straightHand)
                    
 testStraightHandAce = TestCase $ assertEqual
                       "Straight hand (ace handling)" (Just $ Straight Five) (straightFromList straightHandAce)
