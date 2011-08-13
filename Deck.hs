@@ -62,7 +62,7 @@ allSameSuit (x:xs) = all (\c -> getSuit x == getSuit c) xs
 contiguousValues :: [Card] -> Bool
 contiguousValues xs | length uniqValues < 5 = False
                     | (highest - lowest) == 4 = True
-                    | highest == 12 && aceCondition = True
+                    | highest == 14 && aceCondition = True
                     | otherwise = False
   where
     uniqValues = nub $ sort $ map getValue xs 
