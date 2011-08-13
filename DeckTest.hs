@@ -41,7 +41,7 @@ testFourOfAKindNegative = TestCase $ assertEqual
                "Not four of a kind with values" Nothing (fourOfAKindFromList flushHand) 
                
 testFlushPositive = TestCase $ assertEqual
-               "Four of a kind with values" (Just $ FourOfAKind Seven) (flushFromList flushHand) 
+               "Four of a kind with values" (Just $ Flush Seven) (flushFromList flushHand) 
 
 testFlushNegative = TestCase $ assertEqual
                "Not four of a kind with values" Nothing (flushFromList fourOfAKindHand) 

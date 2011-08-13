@@ -98,6 +98,12 @@ fullHouse a b c d e | length groupedCards /= 2 = Nothing
   where
     groupedCards = groupedValues cards
     cards = [a,b,c,d,e]
+    
+flush :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
+flush a b c d e | allSameSuit cards = Just $ Flush (maxValue cards)
+                | otherwise = Nothing
+  where
+    cards = [a,b,c,d,e]
 
 createOrderedDeck :: Deck
 createOrderedDeck = Deck [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
