@@ -114,5 +114,34 @@ flush a b c d e | allSameSuit cards = Just $ Flush (maxValue cards)
 straight :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
 straight _ _ _ _ _= Nothing -- TODO
 
+threeOfAKind :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
+threeOfAKind a b c d e  | length groupedCards /= 3 = Nothing  
+                        | length (last groupedCards) /= 3 = Nothing
+                        | otherwise = Just $ ThreeOfAKind threeValue maxKickerVal minKickerVal
+  where
+    cards = [a,b,c,d,e]
+    threeValue = getValue $ head (last groupedCards)
+    (minKickerVal:maxKickerVal:[]) = sort (map getValue ((head $ head groupedCards) : (head $ tail groupedCards)))
+    groupedCards = groupedValues cards
+
+twoPair :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
+twoPair a b c d e  = Nothing  -- TODO
+  where
+    cards = [a,b,c,d,e]
+    groupedCards = groupedValues cards
+
+onePair :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
+onePair a b c d e = Nothing 
+  where
+    cards = [a,b,c,d,e]
+    groupedCards = groupedValues cards
+
+highCard :: Card -> Card -> Card -> Card -> Card -> BestHand
+highCard a b c d e  = HighCard av bv cv dv ev
+  where
+    cards = sortBy (comparing getValue) [a,b,c,d,e]
+    (av:bv:cv:dv:ev:[]) = map getValue cards
+
+
 createOrderedDeck :: Deck
 createOrderedDeck = Deck [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
