@@ -47,6 +47,9 @@ getCard (Deck xs) n = xs V.! n
 
 data Hand = Hand (Card,Card,Card,Card,Card) deriving Show
 
+mkHand :: (Card,Card,Card,Card,Card) -> Hand
+mkHand = Hand 
+
 data BestHand = StraightFlush Value -- highest card
               | FourOfAKind Value Value -- four of a kind, plus kicker
               | FullHouse Value Value -- 3 and 2
@@ -181,6 +184,6 @@ analyseDeck d choices = map (getFiveCardsHand d) choices
 getFiveCardsHand :: Deck -> (Int,Int,Int,Int,Int) -> (Hand,BestHand)
 getFiveCardsHand dk (a,b,c,d,e) = (cards,getBestHand cards)
   where
-    cards = Hand (a',b',c',d',e')
+    cards = mkHand (a',b',c',d',e')
     [a',b',c',d',e']  = map (getCard dk) [a,b,c,d,e]
   
