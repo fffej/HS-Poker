@@ -109,13 +109,22 @@ straight :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
 straight _ _ _ _ _= Nothing -- TODO
 
 threeOfAKind :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-threeOfAKind _ _ _ _ _ = Nothing  -- TODO
+threeOfAKind a b c d e  = Nothing  -- TODO
+  where
+    cards = [a,b,c,d,e]
+    groupedCards = groupedValues cards
 
 twoPair :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-twoPair _ _ _ _ _ = Nothing  -- TODO
+twoPair a b c d e  = Nothing  -- TODO
+  where
+    cards = [a,b,c,d,e]
+    groupedCards = groupedValues cards
 
 onePair :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-onePair _ _ _ _ _ = Nothing  -- TODO
+onePair a b c d e = Nothing 
+  where
+    cards = [a,b,c,d,e]
+    groupedCards = groupedValues cards
 
 highCard :: Card -> Card -> Card -> Card -> Card -> BestHand
 highCard a b c d e  = HighCard av bv cv dv ev
