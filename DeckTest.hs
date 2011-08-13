@@ -16,6 +16,7 @@ fullHouseHand = [cc h 7, cc d 7, cc s 7, cc c 5, cc d 5]
 straightHand = [cc h 2, cc d 3, cc h 5, cc h 6, cc h 4]
 straightHandAce = [cc h 14, cc h 2, cc h 4, cc h 5, cc h 3]
 threeOfAKindHand = [cc h 14, cc d 14, cc s 14, cc h 9, cc h 5]
+onePairAceHand = [cc h 14, cc d 14, cc c 7, cc d 4, cc d 2]
 
 getBestHandFromList :: [Card] -> BestHand
 getBestHandFromList (a:b:c:d:e:[]) = getBestHand a b c d e 
@@ -29,6 +30,7 @@ flushFromList = handFromList flush
 fullHouseFromList = handFromList fullHouse
 straightFromList = handFromList straight
 threeOfAKindFromList = handFromList threeOfAKind
+onePairFromList = handFromList onePair
 
 testStraightFlushPositive = TestCase $ assertEqual
                "StraightFlush with value" (Just $ StraightFlush Six) (straightFlushFromList straightFlushHand) 
@@ -69,6 +71,14 @@ testStraightHandNegative = TestCase $ assertEqual
 testThreeOfAKindPositive = TestCase $ assertEqual
                            "Three of a kind" (Just (ThreeOfAKind Ace Nine Five)) (threeOfAKindFromList threeOfAKindHand)
 
+testThreeOfAKindNegative = TestCase $ assertEqual
+                           "Not three of a kind!" Nothing (threeOfAKindFromList straightHandAce)
+                           
+testOnePairPositive = TestCase $ assertEqual
+                      "Single pair" (Just $ OnePair Ace Seven Four Two) (onePairFromList onePairAceHand)
+                           
+                           
+
 main = runTestTT $ TestList [
     testStraightFlushPositive
   , testStraightFlushPositiveAce
@@ -83,4 +93,6 @@ main = runTestTT $ TestList [
   , testStraightHandAce
   , testStraightHandNegative
   , testThreeOfAKindPositive
+  , testThreeOfAKindNegative
+  , testOnePairPositive
   ]

@@ -139,8 +139,8 @@ twoPair a b c d e  = Nothing  -- TODO
 
 onePair :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
 onePair a b c d e | length groupedCards /= 4 = Nothing 
-                  | length (last groupedCards) /= 3 = Nothing
-                  | otherwise = Just $ OnePair maxValue k1 k2 k3
+                  | length (last groupedCards) /= 2 = Nothing
+                  | otherwise = Just $ OnePair maxValue k3 k2 k1
   where
     cards = [a,b,c,d,e]
     groupedCards = groupedValues cards
