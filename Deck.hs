@@ -1,5 +1,7 @@
 module Deck where
 
+-- TODO don't export the type constructor Hand, just mkHand
+
 import Data.List
 import Data.Maybe
 import Data.Ord
@@ -48,7 +50,10 @@ getCard (Deck xs) n = xs V.! n
 data Hand = Hand (Card,Card,Card,Card,Card) deriving Show
 
 mkHand :: (Card,Card,Card,Card,Card) -> Hand
-mkHand = Hand 
+mkHand (a,b,c,d,e) = Hand (a',b',c',d',e')
+  where
+    cards = [a,b,c,d,e]
+    [a',b',c',d',e'] = sortBy (comparing getValue) cards
 
 data BestHand = StraightFlush Value -- highest card
               | FourOfAKind Value Value -- four of a kind, plus kicker
@@ -109,7 +114,7 @@ straightFlush h@(Hand (a,b,c,d,e)) | allSameSuit cards && isJust isStraight = Ju
 
 -- TODO express that the length of this resultant list is >=2 && <=5 (at least when supplied with five cards!)
 groupedValues :: [Card] -> [[Card]]
-groupedValues cards = sortBy (comparing length) $ groupBy (\x y -> getValue x == getValue y) $ sortBy (comparing getValue) cards
+groupedValues cards = sortBy (comparing length) $ groupBy (\x y -> getValue x == getValue y) cards
 
 fourOfAKind :: Hand -> Maybe BestHand
 fourOfAKind (Hand (a,b,c,d,e)) | length groupedCards /= 2 = Nothing 
@@ -170,10 +175,7 @@ onePair (Hand (a,b,c,d,e)) | length groupedCards /= 4 = Nothing
     maxValue = getValue $ head (last groupedCards)
 
 highCard :: Hand -> BestHand
-highCard (Hand (a,b,c,d,e))  = HighCard av bv cv dv ev
-  where
-    cards = sortBy (comparing getValue) [a,b,c,d,e]
-    (av:bv:cv:dv:ev:[]) = map getValue cards
+highCard (Hand (a,b,c,d,e))  = HighCard (getValue a) (getValue b) (getValue c) (getValue d) (getValue e)
 
 createOrderedDeck :: Deck
 createOrderedDeck = Deck $ V.fromList [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]

@@ -20,10 +20,10 @@ twoPairsHand = [cc h 14, cc d 14, cc s 9, cc h 9, cc h 5]
 onePairAceHand = [cc h 14, cc d 14, cc c 7, cc d 4, cc d 2]
 
 getBestHandFromList :: [Card] -> BestHand
-getBestHandFromList (a:b:c:d:e:[]) = getBestHand (Hand (a,b,c,d,e))
+getBestHandFromList (a:b:c:d:e:[]) = getBestHand (mkHand (a,b,c,d,e))
 
 handFromList :: (Hand -> Maybe BestHand) -> [Card] -> Maybe BestHand
-handFromList  f (a:b:c:d:e:[]) = f (Hand (a,b,c,d,e))
+handFromList  f (a:b:c:d:e:[]) = f (mkHand (a,b,c,d,e))
 
 straightFlushFromList = handFromList straightFlush
 fourOfAKindFromList = handFromList fourOfAKind
