@@ -20,23 +20,15 @@ threeOfAKindHand = [cc h 14, cc d 14, cc s 14, cc h 9, cc h 5]
 getBestHandFromList :: [Card] -> BestHand
 getBestHandFromList (a:b:c:d:e:[]) = getBestHand a b c d e 
 
-straightFlushFromList :: [Card] -> Maybe BestHand
-straightFlushFromList (a:b:c:d:e:[]) = straightFlush a b c d e 
+handFromList :: (Card -> Card -> Card -> Card -> Card -> Maybe BestHand) -> [Card] -> Maybe BestHand
+handFromList  f (a:b:c:d:e:[]) = f a b c d e 
 
-fourOfAKindFromList :: [Card] -> Maybe BestHand
-fourOfAKindFromList (a:b:c:d:e:[]) = fourOfAKind a b c d e 
-
-flushFromList :: [Card] -> Maybe BestHand
-flushFromList (a:b:c:d:e:[]) = flush a b c d e 
-
-fullHouseFromList :: [Card] -> Maybe BestHand
-fullHouseFromList (a:b:c:d:e:[]) = fullHouse a b c d e 
-
-straightFromList :: [Card] -> Maybe BestHand
-straightFromList (a:b:c:d:e:[]) = straight a b c d e 
-
-threeOfAKindFromList :: [Card] -> Maybe BestHand
-threeOfAKindFromList (a:b:c:d:e:[]) = threeOfAKind a b c d e
+straightFlushFromList = handFromList straightFlush
+fourOfAKindFromList = handFromList fourOfAKind
+flushFromList = handFromList flush
+fullHouseFromList = handFromList fullHouse
+straightFromList = handFromList straight
+threeOfAKindFromList = handFromList threeOfAKind
 
 testStraightFlushPositive = TestCase $ assertEqual
                "StraightFlush with value" (Just $ StraightFlush Six) (straightFlushFromList straightFlushHand) 
