@@ -91,5 +91,13 @@ fourOfAKind a b c d e | length groupedCards /= 2 = Nothing
     groupedCards = groupedValues cards
     cards = [a,b,c,d,e]
 
+fullHouse :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
+fullHouse a b c d e | length groupedCards /= 2 = Nothing 
+                      | length (head groupedCards) /= 2 = Nothing
+                      | otherwise = Just $ FullHouse (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
+  where
+    groupedCards = groupedValues cards
+    cards = [a,b,c,d,e]
+
 createOrderedDeck :: Deck
 createOrderedDeck = Deck [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
