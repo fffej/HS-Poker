@@ -19,6 +19,8 @@ testStraightFlushPositive = TestCase $ assertEqual
 
 testStraightFlushNegative = TestCase $ assertEqual
                "Not a StraightFlush with value" Nothing (straightFlushFromList [cc h s| s <- [2,3,4,7,6]]) 
+               
+               
 
 
 main = runTestTT $ TestList [testStraightFlushPositive,testStraightFlushNegative]

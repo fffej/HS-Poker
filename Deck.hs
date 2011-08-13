@@ -2,6 +2,7 @@ module Deck where
 
 import Data.List
 import Data.Maybe
+import Data.Ord
 
 data Suit = Hearts | Diamonds | Spades | Clubs deriving (Show,Eq)
 
@@ -76,6 +77,18 @@ straightFlush :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
 straightFlush a b c d e | allSameSuit cards && contiguousValues cards = Just $ StraightFlush (maxValue cards)
                         | otherwise = Nothing
   where
+    cards = [a,b,c,d,e]
+
+-- TODO express that the length of this resultant list is >=2 && <=5 (at least when supplied with five cards!)
+groupedValues :: [Card] -> [[Card]]
+groupedValues cards = sortBy (comparing length) $ groupBy (\x y -> getValue x == getValue y) $ sortBy (comparing getValue) cards
+
+fourOfAKind :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
+fourOfAKind a b c d e | length groupedCards /= 2 = Nothing 
+                      | length (head groupedCards) /= 1 = Nothing
+                      | otherwise = Just $ FourOfAKind (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
+  where
+    groupedCards = groupedValues cards
     cards = [a,b,c,d,e]
 
 createOrderedDeck :: Deck
