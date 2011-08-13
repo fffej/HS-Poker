@@ -3,6 +3,11 @@ module Deck where
 import Data.List
 import Data.Maybe
 import Data.Ord
+import qualified Data.Vector as V
+
+import Choose
+
+type CardVector = V.Vector Card
 
 data Suit = Hearts | Diamonds | Spades | Clubs deriving (Show,Eq)
 
@@ -35,7 +40,10 @@ getValue (Card _ v) = v
 instance Show Card where
   show (Card suit value) = show value ++ " of " ++ show suit
 
-data Deck = Deck [Card] deriving Show
+data Deck = Deck CardVector deriving Show
+
+getCard :: Deck -> Int -> Card
+getCard (Deck xs) n = xs V.! n
 
 data Hand = Hand [Card]
 
@@ -50,11 +58,19 @@ data BestHand = StraightFlush Value -- highest card
               | HighCard Value Value Value Value Value
                 deriving (Show,Eq)
   
+isStraightFlush :: BestHand -> Value -> Bool                         
+isStraightFlush (StraightFlush v) x | v == x = True
+                                    | otherwise = False
+isStraightFlush _ _ = False
+                         
 getBestHand :: Card -> Card -> Card -> Card -> Card -> BestHand
-getBestHand a b c d e | isJust straightFlush' = fromJust straightFlush' 
+getBestHand a b c d e = result
   where
-    straightFlush' = straightFlush a b c d e
-                                                             
+    fs = [straightFlush, fourOfAKind, fullHouse, flush, straight, threeOfAKind, twoPairs, onePair]
+    results :: [BestHand]
+    results = mapMaybe (\x -> x a b c d e) fs
+    result = head (results ++ [(highCard a b c d e)])
+
 allSameSuit :: [Card] -> Bool
 allSameSuit [] = True
 allSameSuit (x:xs) = all (\c -> getSuit x == getSuit c) xs
@@ -156,6 +172,14 @@ highCard a b c d e  = HighCard av bv cv dv ev
     cards = sortBy (comparing getValue) [a,b,c,d,e]
     (av:bv:cv:dv:ev:[]) = map getValue cards
 
-
 createOrderedDeck :: Deck
-createOrderedDeck = Deck [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
+createOrderedDeck = Deck $ V.fromList [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
+
+analyseDeck :: Deck -> [(Int,Int,Int,Int,Int)] -> [((Card,Card,Card,Card,Card),BestHand)]
+analyseDeck d choices = map (getFiveCardsHand d) choices
+
+getFiveCardsHand :: Deck -> (Int,Int,Int,Int,Int) -> ((Card,Card,Card,Card,Card),BestHand)
+getFiveCardsHand dk (a,b,c,d,e) = ((a',b',c',d',e'),getBestHand a' b' c' d' e')
+  where
+    [a',b',c',d',e']  = map (getCard dk) [a,b,c,d,e]
+   
