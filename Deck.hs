@@ -108,5 +108,21 @@ flush a b c d e | allSameSuit cards = Just $ Flush (maxValue cards)
 straight :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
 straight _ _ _ _ _= Nothing -- TODO
 
+threeOfAKind :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
+threeOfAKind _ _ _ _ _ = Nothing  -- TODO
+
+twoPair :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
+twoPair _ _ _ _ _ = Nothing  -- TODO
+
+onePair :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
+onePair _ _ _ _ _ = Nothing  -- TODO
+
+highCard :: Card -> Card -> Card -> Card -> Card -> BestHand
+highCard a b c d e  = HighCard av bv cv dv ev
+  where
+    cards = sortBy (comparing getValue) [a,b,c,d,e]
+    (av:bv:cv:dv:ev:[]) = map getValue cards
+
+
 createOrderedDeck :: Deck
 createOrderedDeck = Deck [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
