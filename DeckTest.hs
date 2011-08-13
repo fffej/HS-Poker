@@ -21,6 +21,9 @@ straightFlushFromList (a:b:c:d:e:[]) = straightFlush a b c d e
 fourOfAKindFromList :: [Card] -> Maybe BestHand
 fourOfAKindFromList (a:b:c:d:e:[]) = fourOfAKind a b c d e 
 
+flushFromList :: [Card] -> Maybe BestHand
+flushFromList (a:b:c:d:e:[]) = flush a b c d e 
+
 testStraightFlushPositive = TestCase $ assertEqual
                "StraightFlush with value" (Just $ StraightFlush Six) (straightFlushFromList straightFlushHand) 
 
@@ -33,7 +36,13 @@ testFourOfAKindPositive = TestCase $ assertEqual
 testFourOfAKindNegative = TestCase $ assertEqual
                "Not four of a kind with values" Nothing (fourOfAKindFromList flushHand) 
                
+testFlushPositive = TestCase $ assertEqual
+               "Four of a kind with values" (Just $ FourOfAKind Seven) (flushFromList flushHand) 
+
+testFlushNegative = TestCase $ assertEqual
+               "Not four of a kind with values" Nothing (flushFromList fourOfAKindHand) 
+               
                
 
 
-main = runTestTT $ TestList [testStraightFlushPositive,testStraightFlushNegative,testFourOfAKindPositive,testFourOfAKindNegative]
+main = runTestTT $ TestList [testStraightFlushPositive,testStraightFlushNegative,testFourOfAKindPositive,testFourOfAKindNegative,testFlushPositive,testFlushNegative]
