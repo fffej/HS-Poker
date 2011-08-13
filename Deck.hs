@@ -115,7 +115,7 @@ threeOfAKind a b c d e  | length groupedCards /= 3 = Nothing
   where
     cards = [a,b,c,d,e]
     threeValue = getValue $ head (last groupedCards)
-    (minKickerVal:maxKickerVal:[]) = sort (map getValue ((head $ head groupedCards) : (head $ init groupedCards)))
+    (minKickerVal:maxKickerVal:[]) = sort (map getValue ((head $ head groupedCards) : (head $ tail groupedCards)))
     groupedCards = groupedValues cards
 
 twoPair :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
