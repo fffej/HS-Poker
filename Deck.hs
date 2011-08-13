@@ -73,8 +73,14 @@ contiguousValues xs | length uniqValues < 5 = False
 maxValue :: [Card] -> Value
 maxValue = maximum . (map getValue)
 
+maxValueInStraight :: [Card] -> Value
+maxValueInStraight cards | isStraightWithLowAce cards = last $ init sortedValues
+                         | otherwise                  = last sortedValues
+    where sortedValues = sort $ map getValue cards
+          isStraightWithLowAce cards = contiguousValues cards && Ace `elem` sortedValues && Two `elem` sortedValues
+
 straightFlush :: Card -> Card -> Card -> Card -> Card -> Maybe BestHand
-straightFlush a b c d e | allSameSuit cards && contiguousValues cards = Just $ StraightFlush (maxValue cards)
+straightFlush a b c d e | allSameSuit cards && contiguousValues cards = Just $ StraightFlush (maxValueInStraight cards)
                         | otherwise = Nothing
   where
     cards = [a,b,c,d,e]
