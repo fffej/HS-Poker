@@ -38,26 +38,6 @@ getBestHand h = result
     results = mapMaybe (\x -> x h) fs
     result = head (results ++ [highCard h])
   
-contiguousValues :: [Card] -> Bool
-contiguousValues xs | length uniqValues < 5 = False
-                    | uniqValues == enumFromTo lowest highest = True
-                    | highest == Ace  && aceCondition = True
-                    | otherwise = False
-  where
-    uniqValues = nub $ map getValue xs 
-    lowest = head uniqValues
-    highest = last uniqValues
-    aceCondition = lowest == Two && last (init uniqValues) == Five
-
-maxValue :: [Card] -> Value
-maxValue = maximum . map getValue
-
-maxValueInStraight :: [Card] -> Value
-maxValueInStraight cards | isStraightWithLowAce cards = last $ init sortedValues
-                         | otherwise                  = last sortedValues
-    where sortedValues = sort $ map getValue cards
-          isStraightWithLowAce cards = contiguousValues cards && Ace `elem` sortedValues && Two `elem` sortedValues
-
 straightFlush :: Hand -> Maybe BestHand
 straightFlush hand | allSameSuit hand && isJust isStraight = Just $ StraightFlush v
                    | otherwise = Nothing
@@ -72,8 +52,8 @@ fourOfAKind (Hand _ groupedCards ) | length groupedCards /= 2 = Nothing
 
 fullHouse :: Hand -> Maybe BestHand
 fullHouse (Hand _ groupedCards) | length groupedCards /= 2 = Nothing 
-                                          | length (head groupedCards) /= 2 = Nothing
-                                          | otherwise = Just $ FullHouse (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
+                                | length (head groupedCards) /= 2 = Nothing
+                                | otherwise = Just $ FullHouse (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
 
     
 flush :: Hand -> Maybe BestHand
@@ -81,11 +61,8 @@ flush h@(Hand (_,_,_,_,e) _ ) | allSameSuit h = Just $ Flush (getValue e)
                               | otherwise = Nothing
     
 straight :: Hand -> Maybe BestHand
-straight (Hand (a,b,c,d,e) _) | contiguousValues cards = Just $ Straight (maxValueInStraight cards)
-                              | otherwise = Nothing
-  where
-    cards = [a,b,c,d,e]
-
+straight hand | contiguousValues hand = Just $ Straight (maxValueInStraight hand)
+              | otherwise = Nothing
 
 threeOfAKind :: Hand -> Maybe BestHand
 threeOfAKind (Hand (a,b,c,d,e) groupedCards) | length groupedCards /= 3 = Nothing  
