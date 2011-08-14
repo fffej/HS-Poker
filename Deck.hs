@@ -59,16 +59,16 @@ mkStraightFlush hand = StraightFlush v
   where
     (Straight v) = mkStraight hand
 
-isFourOfAKind :: [[Value]] -> Bool
+isFourOfAKind :: GroupedValues -> Bool
 isFourOfAKind groupedValues = length groupedValues == 2 && length (head groupedValues) == 1
 
-mkFourOfAKind :: [[Value]] -> BestHand
+mkFourOfAKind :: GroupedValues -> BestHand
 mkFourOfAKind groupedValues = FourOfAKind (head $ last groupedValues) (head $ head groupedValues)
 
-isFullHouse :: [[Value]] -> Bool
+isFullHouse :: GroupedValues -> Bool
 isFullHouse groupedValues = length groupedValues == 2 && length (head groupedValues) == 2 
 
-mkFullHouse :: [[Value]] -> BestHand
+mkFullHouse :: GroupedValues -> BestHand
 mkFullHouse groupedValues = FullHouse (head $ last groupedValues) (head $ head groupedValues)
   
 isFlush :: Hand -> Bool
@@ -83,27 +83,27 @@ isStraight = contiguousValues
 mkStraight :: Hand -> BestHand
 mkStraight hand = Straight (maxValueInStraight hand)
 
-isThreeOfAKind :: [[Value]] -> Bool
+isThreeOfAKind :: GroupedValues -> Bool
 isThreeOfAKind groupedValues = length groupedValues == 3 && length (last groupedValues) == 3
 
-mkThreeOfAKind :: [[Value]] -> BestHand
+mkThreeOfAKind :: GroupedValues -> BestHand
 mkThreeOfAKind groupedValues = ThreeOfAKind threeValue maxKickerVal minKickerVal
   where
     threeValue = head (last groupedValues)
     (minKickerVal:maxKickerVal:[]) = sort (head (head groupedValues) : head (tail groupedValues))
                                          
-isTwoPairs :: [[Value]] -> Bool
+isTwoPairs :: GroupedValues -> Bool
 isTwoPairs groupedValues = (length groupedValues) == 3  && length (last groupedValues) == 2 
 
-mkTwoPairs :: [[Value]] -> BestHand
+mkTwoPairs :: GroupedValues -> BestHand
 mkTwoPairs groupedValues = TwoPairs highPair lowPair kicker
   where
     [kicker,lowPair,highPair] = map head groupedValues                                     
                                      
-isOnePair :: [[Value]] -> Bool
+isOnePair :: GroupedValues -> Bool
 isOnePair groupedValues = length groupedValues == 4 && length (last groupedValues) == 2
 
-mkOnePair :: [[Value]] -> BestHand
+mkOnePair :: GroupedValues -> BestHand
 mkOnePair groupedValues = OnePair maxValue k3 k2 k1
   where
     (k1:k2:k3:[]) = map head (init groupedValues)

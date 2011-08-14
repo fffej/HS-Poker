@@ -1,5 +1,6 @@
 module Hand (
     Hand(..), -- TODO eliminate the destructuring and hence the need for ..
+    GroupedValues,
     mkHand,
     allSameSuit,
     contiguousValues,
@@ -13,6 +14,8 @@ import Data.List (sortBy,group)
 import Data.Ord (comparing)
 
 data Hand = Hand (Card,Card,Card,Card,Card) deriving Show
+
+type GroupedValues = [[Value]]
 
 mkHand :: (Card,Card,Card,Card,Card) -> Hand
 mkHand (a,b,c,d,e) = Hand (a',b',c',d',e') 
