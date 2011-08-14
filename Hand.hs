@@ -4,12 +4,12 @@ module Hand (
     allSameSuit,
     contiguousValues,
     maxValueInStraight,
-    getGroupedCards
+    getGroupedValues
   ) where
 
 import Card (Card,getValue,getSuit,Value(..))
 
-import Data.List (sortBy,groupBy)
+import Data.List (sortBy,group)
 import Data.Ord (comparing)
 
 data Hand = Hand (Card,Card,Card,Card,Card) deriving Show
@@ -19,14 +19,14 @@ mkHand (a,b,c,d,e) = Hand (a',b',c',d',e')
   where
     [a',b',c',d',e'] = sortBy (comparing getValue) [a,b,c,d,e]
 
-getGroupedCards :: Hand -> [[Card]]
-getGroupedCards (Hand (a,b,c,d,e)) = sortBy (comparing length) $ groupBy (\x y -> getValue x == getValue y) cards
+getGroupedValues :: Hand -> [[Value]]
+getGroupedValues (Hand (a,b,c,d,e)) = sortBy (comparing length) $ group values
   where
-    cards = [a,b,c,d,e]
+    values = map getValue [a,b,c,d,e]
 
 allSameSuit :: Hand -> Bool
 allSameSuit (Hand (a,b,c,d,e)) = getSuit a == getSuit b && getSuit b == getSuit c &&
-                                   getSuit c == getSuit d && getSuit d == getSuit e
+                                 getSuit c == getSuit d && getSuit d == getSuit e
 
 contiguousValues :: Hand -> Bool
 contiguousValues (Hand (a,b,c,d,e)) 
