@@ -66,18 +66,18 @@ straightFlush hand | allSameSuit hand && isJust isStraight = Just $ StraightFlus
     (Straight v) = fromJust isStraight
     
 fourOfAKind :: Hand -> Maybe BestHand
-fourOfAKind (Hand (a,b,c,d,e) groupedCards ) | length groupedCards /= 2 = Nothing 
-                                             | length (head groupedCards) /= 1 = Nothing
-                                             | otherwise = Just $ FourOfAKind (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
+fourOfAKind (Hand _ groupedCards ) | length groupedCards /= 2 = Nothing 
+                                   | length (head groupedCards) /= 1 = Nothing
+                                   | otherwise = Just $ FourOfAKind (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
 
 fullHouse :: Hand -> Maybe BestHand
-fullHouse (Hand (a,b,c,d,e) groupedCards) | length groupedCards /= 2 = Nothing 
+fullHouse (Hand _ groupedCards) | length groupedCards /= 2 = Nothing 
                                           | length (head groupedCards) /= 2 = Nothing
                                           | otherwise = Just $ FullHouse (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
 
     
 flush :: Hand -> Maybe BestHand
-flush h@(Hand (a,b,c,d,e) _ ) | allSameSuit h = Just $ Flush (getValue e)
+flush h@(Hand (_,_,_,_,e) _ ) | allSameSuit h = Just $ Flush (getValue e)
                               | otherwise = Nothing
     
 straight :: Hand -> Maybe BestHand
@@ -96,16 +96,16 @@ threeOfAKind (Hand (a,b,c,d,e) groupedCards) | length groupedCards /= 3 = Nothin
     (minKickerVal:maxKickerVal:[]) = sort (map getValue (head (head groupedCards) : head (tail groupedCards)))
 
 twoPairs :: Hand -> Maybe BestHand
-twoPairs (Hand (a,b,c,d,e) groupedCards) | length groupedCards /= 3 = Nothing  
-                                         | length (last groupedCards) /= 2 = Nothing
-                                         | otherwise = Just $ TwoPairs highPair lowPair kicker
+twoPairs (Hand _ groupedCards) | length groupedCards /= 3 = Nothing  
+                               | length (last groupedCards) /= 2 = Nothing
+                               | otherwise = Just $ TwoPairs highPair lowPair kicker
   where
     [kicker,lowPair,highPair] = map (getValue . head) groupedCards
 
 onePair :: Hand -> Maybe BestHand
-onePair (Hand (a,b,c,d,e) groupedCards) | length groupedCards /= 4 = Nothing 
-                                        | length (last groupedCards) /= 2 = Nothing
-                                        | otherwise = Just $ OnePair maxValue k3 k2 k1
+onePair (Hand _ groupedCards) | length groupedCards /= 4 = Nothing 
+                              | length (last groupedCards) /= 2 = Nothing
+                              | otherwise = Just $ OnePair maxValue k3 k2 k1
   where
     (k1:k2:k3:[]) = map (getValue . head) (init groupedCards)
     maxValue = getValue $ head (last groupedCards)
