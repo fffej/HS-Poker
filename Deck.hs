@@ -1,6 +1,5 @@
 module Deck where
 
--- TODO don't export the type constructor Hand, just mkHand
 import Card
 import Hand
 
@@ -17,7 +16,6 @@ data Deck = Deck CardVector deriving Show
 
 getCard :: Deck -> Int -> Card
 getCard (Deck xs) n = xs V.! n
-
 
 data BestHand = StraightFlush Value -- highest card
               | FourOfAKind Value Value -- four of a kind, plus kicker
@@ -49,17 +47,17 @@ allSameSuit (Hand (a,b,c,d,e) _) = getSuit a == getSuit b && getSuit b == getSui
   
 contiguousValues :: [Card] -> Bool
 contiguousValues xs | length uniqValues < 5 = False
-                    | (uniqValues == (enumFromTo lowest highest)) = True
+                    | uniqValues == enumFromTo lowest highest = True
                     | highest == Ace  && aceCondition = True
                     | otherwise = False
   where
     uniqValues = nub $ map getValue xs 
     lowest = head uniqValues
     highest = last uniqValues
-    aceCondition = lowest == Two && (last (init uniqValues)) == Five
+    aceCondition = lowest == Two && last (init uniqValues) == Five
 
 maxValue :: [Card] -> Value
-maxValue = maximum . (map getValue)
+maxValue = maximum . map getValue
 
 maxValueInStraight :: [Card] -> Value
 maxValueInStraight cards | isStraightWithLowAce cards = last $ init sortedValues
@@ -102,7 +100,7 @@ threeOfAKind (Hand (a,b,c,d,e) groupedCards) | length groupedCards /= 3 = Nothin
                                              | otherwise = Just $ ThreeOfAKind threeValue maxKickerVal minKickerVal
   where
     threeValue = getValue $ head (last groupedCards)
-    (minKickerVal:maxKickerVal:[]) = sort (map getValue ((head $ head groupedCards) : (head $ tail groupedCards)))
+    (minKickerVal:maxKickerVal:[]) = sort (map getValue (head (head groupedCards) : head (tail groupedCards)))
 
 twoPairs :: Hand -> Maybe BestHand
 twoPairs (Hand (a,b,c,d,e) groupedCards) | length groupedCards /= 3 = Nothing  
@@ -116,7 +114,7 @@ onePair (Hand (a,b,c,d,e) groupedCards) | length groupedCards /= 4 = Nothing
                                         | length (last groupedCards) /= 2 = Nothing
                                         | otherwise = Just $ OnePair maxValue k3 k2 k1
   where
-    (k1:k2:k3:[]) = (map getValue (map head $ init groupedCards))
+    (k1:k2:k3:[]) = map (getValue . head) (init groupedCards)
     maxValue = getValue $ head (last groupedCards)
 
 highCard :: Hand -> BestHand
@@ -126,7 +124,7 @@ createOrderedDeck :: Deck
 createOrderedDeck = Deck $ V.fromList [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
 
 analyseDeck :: Deck -> [(Int,Int,Int,Int,Int)] -> [(Hand,BestHand)]
-analyseDeck d choices = map (getFiveCardsHand d) choices
+analyseDeck d = map (getFiveCardsHand d) 
 
 getFiveCardsHand :: Deck -> (Int,Int,Int,Int,Int) -> (Hand,BestHand)
 getFiveCardsHand dk (a,b,c,d,e) = (cards,getBestHand cards)
