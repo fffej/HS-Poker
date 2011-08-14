@@ -22,7 +22,7 @@ mkHand (a,b,c,d,e) = Hand (a',b',c',d',e')
   where
     [a',b',c',d',e'] = sortBy (comparing getValue) [a,b,c,d,e]
 
-getGroupedValues :: Hand -> [[Value]]
+getGroupedValues :: Hand -> GroupedValues
 getGroupedValues (Hand (a,b,c,d,e)) = sortBy (comparing length) $ group values
   where
     values = map getValue [a,b,c,d,e]
