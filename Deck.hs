@@ -17,7 +17,7 @@ getCard (Deck xs) n = xs V.! n
 data BestHand = StraightFlush Value -- highest card
               | FourOfAKind Value Value -- four of a kind, plus kicker
               | FullHouse Value Value -- 3 and 2
-              | Flush Value -- highest card
+              | Flush Value Value Value Value Value -- highest card
               | Straight Value -- highest card
               | ThreeOfAKind Value Value Value -- three of a kind, plus kickers
               | TwoPairs Value Value Value -- two pairs, plus kicker
@@ -57,7 +57,7 @@ fullHouse (Hand _ groupedCards) | length groupedCards /= 2 = Nothing
 
     
 flush :: Hand -> Maybe BestHand
-flush h@(Hand (_,_,_,_,e) _ ) | allSameSuit h = Just $ Flush (getValue e)
+flush h@(Hand (a,b,c,d,e) _ ) | allSameSuit h = Just $ Flush (getValue e) (getValue d) (getValue c) (getValue b) (getValue a)
                               | otherwise = Nothing
     
 straight :: Hand -> Maybe BestHand

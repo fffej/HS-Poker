@@ -31,7 +31,7 @@ contiguousValues :: Hand -> Bool
 contiguousValues (Hand (a,b,c,d,e) gv) 
   | length gv /= 5 = False
   | (a' == Two && e' == Ace) && firstFourCardsContiguous = True
-  | otherwise = firstFourCardsContiguous && succ d' == e'
+  | otherwise = firstFourCardsContiguous && d' /= Ace && succ d' == e'
     where
       a' = getValue a
       b' = getValue b
