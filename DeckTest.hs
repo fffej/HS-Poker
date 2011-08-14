@@ -1,6 +1,9 @@
 module DeckTest where
 
 import Deck
+import Hand
+import Card
+
 import Test.HUnit
 
 h = 'H'

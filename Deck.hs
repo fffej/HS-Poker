@@ -1,6 +1,8 @@
 module Deck where
 
 -- TODO don't export the type constructor Hand, just mkHand
+import Card
+import Hand
 
 import Data.List
 import Data.Maybe
@@ -11,53 +13,11 @@ import Choose
 
 type CardVector = V.Vector Card
 
-data Suit = Hearts | Diamonds | Spades | Clubs deriving (Show,Eq)
-
-data Value = Two | Three | Four | Five | Six | Seven | Eight | Nine | Ten | Jack | Queen | King | Ace
-           deriving (Show,Enum,Eq,Ord)
-
-cc :: Char -> Int -> Card
-cc c 1 = Card (mkSuit c) Ace
-cc c n = Card (mkSuit c) (mkValue n)
-
-mkSuit :: Char -> Suit
-mkSuit 'D' = Diamonds
-mkSuit 'C' = Clubs
-mkSuit 'S' = Spades
-mkSuit 'H' = Hearts
-mkSuit _ = error "Are you mad?  What type of card is that!"
-
-mkValue :: Int -> Value
-mkValue 1 = Ace
-mkValue n = toEnum (n - 2)
-
-data Card = Card Suit Value
-
-getSuit :: Card -> Suit
-getSuit (Card x _) = x
-
-getValue :: Card -> Value
-getValue (Card _ v) = v
-
-instance Show Card where
-  show (Card suit value) = show value ++ " of " ++ show suit
-
 data Deck = Deck CardVector deriving Show
 
 getCard :: Deck -> Int -> Card
 getCard (Deck xs) n = xs V.! n
 
-data Hand = Hand (Card,Card,Card,Card,Card) [[Card]] deriving Show
-
-mkHand :: (Card,Card,Card,Card,Card) -> Hand
-mkHand (a,b,c,d,e) = Hand (a',b',c',d',e') gc
-  where
-    gc = groupedValues [a',b',c',d',e']
-    cards = [a,b,c,d,e]
-    [a',b',c',d',e'] = sortBy (comparing getValue) cards
-
-groupedValues :: [Card] -> [[Card]]
-groupedValues cards = sortBy (comparing length) $ groupBy (\x y -> getValue x == getValue y) cards
 
 data BestHand = StraightFlush Value -- highest card
               | FourOfAKind Value Value -- four of a kind, plus kicker
