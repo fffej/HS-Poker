@@ -25,6 +25,28 @@ data BestHand = StraightFlush Value -- highest card
               | HighCard Value Value Value Value Value
                 deriving (Show,Eq)
   
+
+maxHighCard = score (HighCard Ace Ace Ace Ace Ace)
+maxOnePair = score (OnePair Ace Ace Ace Ace)
+maxTwoPairs = score (TwoPairs Ace Ace Ace)
+maxThreeOfAKind = score (ThreeOfAKind Ace Ace Ace)
+maxStraight = score (Straight Ace)
+maxFlush = score (Flush Ace Ace Ace Ace Ace)
+maxFullHouse = score (FullHouse Ace Ace)
+maxFourOfAKind = score (FourOfAKind Ace Ace)
+maxStraightFlush = score (StraightFlush Ace)
+
+score :: BestHand -> Int
+score (HighCard a b c d e) = fromEnum a * (12 ^ 4) + fromEnum b * (12 ^ 3) + fromEnum c * (12 ^ 2)  + fromEnum d * 12 + fromEnum e
+score (OnePair a b c d) = maxHighCard + (fromEnum a * 12^3) + (fromEnum b * 12^2) + (fromEnum c * 12) + fromEnum d
+score (TwoPairs a b c) = maxOnePair + (fromEnum a * 12^2) + (fromEnum b * 12) + fromEnum c
+score (ThreeOfAKind a b c) = maxTwoPairs + (fromEnum a * 12^2) + (fromEnum b * 12) + fromEnum c
+score (Straight a) = maxThreeOfAKind + (fromEnum a)
+score (Flush a b c d e) = maxStraight + fromEnum a * (12 ^ 4) + fromEnum b * (12 ^ 3) + fromEnum c * (12 ^ 2)  + fromEnum d * 12 + fromEnum e
+score (FullHouse a b) = maxFlush + fromEnum a * 12 + fromEnum b
+score (FourOfAKind a b) = maxFullHouse + fromEnum a * 12 + fromEnum b
+score (StraightFlush a) = maxFourOfAKind + fromEnum a
+
 isStraightFlush :: BestHand -> Value -> Bool                         
 isStraightFlush (StraightFlush v) x | v == x = True
                                     | otherwise = False
