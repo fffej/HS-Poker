@@ -39,7 +39,7 @@ createCards x (a,b,c,d,e)= mkHand (x !! a, x !! b, x !! c, x !! d, x !! e)
 getBestHandFromCards :: [Card] -> Maybe Hand
 getBestHandFromCards cards
   | cardCount < 5 = Nothing
-  | otherwise = Just $ maximumBy (comparing (\x -> score (getBestHand x))) (map (createCards cards) (map zeroBase $ combinations 5 cardCount))
+  | otherwise = Just $ maximumBy (comparing (score . getBestHand)) (map (createCards cards . zeroBase) (combinations 5 cardCount))
     where
       cardCount = length cards
 
