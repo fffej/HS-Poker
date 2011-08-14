@@ -5,10 +5,7 @@ import Hand
 
 import Data.List
 import Data.Maybe
-import Data.Ord
 import qualified Data.Vector as V
-
-import Choose
 
 type CardVector = V.Vector Card
 
