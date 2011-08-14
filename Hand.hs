@@ -3,7 +3,8 @@ module Hand (
     mkHand,
     allSameSuit,
     contiguousValues,
-    maxValueInStraight
+    maxValueInStraight,
+    getGroupedCards
   ) where
 
 import Card (Card,getValue,getSuit,Value(..))
@@ -11,25 +12,25 @@ import Card (Card,getValue,getSuit,Value(..))
 import Data.List (sortBy,groupBy)
 import Data.Ord (comparing)
 
-data Hand = Hand (Card,Card,Card,Card,Card) [[Card]] deriving Show
+data Hand = Hand (Card,Card,Card,Card,Card) deriving Show
 
 mkHand :: (Card,Card,Card,Card,Card) -> Hand
-mkHand (a,b,c,d,e) = Hand (a',b',c',d',e') gc
+mkHand (a,b,c,d,e) = Hand (a',b',c',d',e') 
   where
-    gc = groupedValues [a',b',c',d',e']
-    cards = [a,b,c,d,e]
-    [a',b',c',d',e'] = sortBy (comparing getValue) cards
+    [a',b',c',d',e'] = sortBy (comparing getValue) [a,b,c,d,e]
 
-groupedValues :: [Card] -> [[Card]]
-groupedValues cards = sortBy (comparing length) $ groupBy (\x y -> getValue x == getValue y) cards
+getGroupedCards :: Hand -> [[Card]]
+getGroupedCards (Hand (a,b,c,d,e)) = sortBy (comparing length) $ groupBy (\x y -> getValue x == getValue y) cards
+  where
+    cards = [a,b,c,d,e]
 
 allSameSuit :: Hand -> Bool
-allSameSuit (Hand (a,b,c,d,e) _) = getSuit a == getSuit b && getSuit b == getSuit c &&
+allSameSuit (Hand (a,b,c,d,e)) = getSuit a == getSuit b && getSuit b == getSuit c &&
                                    getSuit c == getSuit d && getSuit d == getSuit e
 
 contiguousValues :: Hand -> Bool
-contiguousValues (Hand (a,b,c,d,e) gv) 
-  | length gv /= 5 = False
+contiguousValues (Hand (a,b,c,d,e)) 
+  | not (a' /= b' && b' /= c' && c'/=d' && d'/=e') = False
   | (a' == Two && e' == Ace) && firstFourCardsContiguous = True
   | otherwise = firstFourCardsContiguous && d' /= Ace && succ d' == e'
     where
@@ -42,7 +43,7 @@ contiguousValues (Hand (a,b,c,d,e) gv)
   
 -- Assumed that it is already a straight!
 maxValueInStraight :: Hand -> Value      
-maxValueInStraight (Hand (a,_,_,_,e) _) 
+maxValueInStraight (Hand (a,_,_,_,e)) 
   | e' == Ace && a' == Two = Five
   | otherwise = e'
     where

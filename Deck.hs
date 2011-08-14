@@ -59,23 +59,23 @@ mkStraightFlush hand = StraightFlush v
   where
     (Straight v) = mkStraight hand
 
-isFourOfAKind :: Hand -> Bool
-isFourOfAKind (Hand _ groupedCards) = length groupedCards == 2 && length (head groupedCards) == 1
+isFourOfAKind :: [[Card]] -> Bool
+isFourOfAKind groupedCards = length groupedCards == 2 && length (head groupedCards) == 1
 
-mkFourOfAKind :: Hand -> BestHand
-mkFourOfAKind (Hand _ groupedCards) = FourOfAKind (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards)) 
+mkFourOfAKind :: [[Card]] -> BestHand
+mkFourOfAKind groupedCards = FourOfAKind (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards)) 
 
-isFullHouse :: Hand -> Bool
-isFullHouse (Hand _ groupedCards) = length groupedCards == 2 && length (head groupedCards) == 2 
+isFullHouse :: [[Card]] -> Bool
+isFullHouse groupedCards = length groupedCards == 2 && length (head groupedCards) == 2 
 
-mkFullHouse :: Hand -> BestHand
-mkFullHouse (Hand _ groupedCards) = FullHouse (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
+mkFullHouse :: [[Card]] -> BestHand
+mkFullHouse groupedCards = FullHouse (getValue (head $ last groupedCards)) (getValue (head $ head groupedCards))
   
 isFlush :: Hand -> Bool
 isFlush = allSameSuit    
 
 mkFlush :: Hand -> BestHand
-mkFlush (Hand (a,b,c,d,e) _) = Flush (getValue e) (getValue d) (getValue c) (getValue b) (getValue a)
+mkFlush (Hand (a,b,c,d,e)) = Flush (getValue e) (getValue d) (getValue c) (getValue b) (getValue a)
 
 isStraight :: Hand -> Bool
 isStraight = contiguousValues
@@ -83,47 +83,50 @@ isStraight = contiguousValues
 mkStraight :: Hand -> BestHand
 mkStraight hand = Straight (maxValueInStraight hand)
 
-isThreeOfAKind :: Hand -> Bool
-isThreeOfAKind (Hand _ groupedCards) = length groupedCards == 3 && length (last groupedCards) == 3
+isThreeOfAKind :: [[Card]] -> Bool
+isThreeOfAKind groupedCards = length groupedCards == 3 && length (last groupedCards) == 3
 
-mkThreeOfAKind :: Hand -> BestHand
-mkThreeOfAKind (Hand _ groupedCards) = ThreeOfAKind threeValue maxKickerVal minKickerVal
+mkThreeOfAKind :: [[Card]] -> BestHand
+mkThreeOfAKind groupedCards = ThreeOfAKind threeValue maxKickerVal minKickerVal
   where
     threeValue = getValue $ head (last groupedCards)
     (minKickerVal:maxKickerVal:[]) = sort (map getValue (head (head groupedCards) : head (tail groupedCards)))
                                          
-isTwoPairs :: Hand -> Bool
-isTwoPairs (Hand _ groupedCards) = length groupedCards == 3 && length (last groupedCards) == 2 
+isTwoPairs :: [[Card]] -> Bool
+isTwoPairs groupedCards = length groupedCards == 3 && length (last groupedCards) == 2 
 
-mkTwoPairs :: Hand -> BestHand
-mkTwoPairs (Hand _ groupedCards) = TwoPairs highPair lowPair kicker
+mkTwoPairs :: [[Card]] -> BestHand
+mkTwoPairs groupedCards = TwoPairs highPair lowPair kicker
   where
     [kicker,lowPair,highPair] = map (getValue . head) groupedCards                                     
                                      
-isOnePair :: Hand -> Bool
-isOnePair (Hand _ groupedCards) = length groupedCards == 4 && length (last groupedCards) == 2
+isOnePair :: [[Card]] -> Bool
+isOnePair groupedCards = length groupedCards == 4 && length (last groupedCards) == 2
 
-mkOnePair :: Hand -> BestHand
-mkOnePair (Hand _ groupedCards) = OnePair maxValue k3 k2 k1
+mkOnePair :: [[Card]] -> BestHand
+mkOnePair groupedCards = OnePair maxValue k3 k2 k1
   where
     (k1:k2:k3:[]) = map (getValue . head) (init groupedCards)
     maxValue = getValue $ head (last groupedCards)
 
 mkHighCard :: Hand -> BestHand
-mkHighCard (Hand (a,b,c,d,e) _)  = HighCard (getValue e) (getValue d) (getValue c) (getValue b) (getValue a)
+mkHighCard (Hand (a,b,c,d,e)) = HighCard (getValue e) (getValue d) (getValue c) (getValue b) (getValue a)
 
 getBestHand :: Hand -> BestHand
 getBestHand hand
   | isStraightFlush hand = mkStraightFlush hand
-  | isFourOfAKind hand = mkFourOfAKind hand
-  | isFullHouse hand = mkFullHouse hand
+  | isFourOfAKind groupedCards = mkFourOfAKind groupedCards
+  | isFullHouse groupedCards = mkFullHouse groupedCards
   | isFlush hand = mkFlush hand
   | isStraight hand = mkStraight hand
-  | isThreeOfAKind hand =  mkThreeOfAKind hand
-  | isTwoPairs hand = mkTwoPairs hand
-  | isOnePair hand = mkOnePair hand
+  | isThreeOfAKind groupedCards =  mkThreeOfAKind groupedCards
+  | isTwoPairs groupedCards = mkTwoPairs groupedCards
+  | isOnePair groupedCards = mkOnePair groupedCards
   | otherwise = mkHighCard hand
+    where
+      groupedCards = getGroupedCards hand
 
+        
 createOrderedDeck :: Deck
 createOrderedDeck = Deck $ V.fromList [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
 
