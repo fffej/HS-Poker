@@ -23,8 +23,7 @@ data BestHand = StraightFlush Value -- highest card
               | TwoPairs Value Value Value -- two pairs, plus kicker
               | OnePair Value Value Value Value -- one pair, 3 kickers
               | HighCard Value Value Value Value Value
-                deriving (Show,Eq)
-  
+                deriving (Show,Eq)  
 
 maxHighCard = score (HighCard Ace Ace Ace Ace Ace)
 maxOnePair = score (OnePair Ace Ace Ace Ace)

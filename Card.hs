@@ -27,7 +27,7 @@ mkValue :: Int -> Value
 mkValue 1 = Ace
 mkValue n = toEnum (n - 2)
 
-data Card = Card Suit Value
+data Card = Card Suit Value deriving Eq
 
 getSuit :: Card -> Suit
 getSuit (Card x _) = x
