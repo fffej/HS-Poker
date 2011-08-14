@@ -25,6 +25,9 @@ data BestHand = StraightFlush Value -- highest card
               | HighCard Value Value Value Value Value
                 deriving (Show,Eq)  
 
+instance Ord BestHand where
+  compare = comparing score
+
 maxHighCard = score (HighCard Ace Ace Ace Ace Ace)
 maxOnePair = score (OnePair Ace Ace Ace Ace)
 maxTwoPairs = score (TwoPairs Ace Ace Ace)
