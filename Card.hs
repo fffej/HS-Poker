@@ -1,4 +1,11 @@
-module Card where
+module Card (
+    Suit(..),
+    Value(..),
+    Card(..),
+    getSuit,
+    getValue,
+    cc
+  ) where
 
 data Suit = Hearts | Diamonds | Spades | Clubs deriving (Show,Eq)
 

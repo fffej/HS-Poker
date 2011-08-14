@@ -1,5 +1,6 @@
 module DeckAnalysis (main) where
 
+import Card
 import Deck
 import Choose
 
