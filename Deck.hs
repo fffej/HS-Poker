@@ -37,10 +37,6 @@ getBestHand h = result
     results :: [BestHand]
     results = mapMaybe (\x -> x h) fs
     result = head (results ++ [highCard h])
-
-allSameSuit :: Hand -> Bool
-allSameSuit (Hand (a,b,c,d,e) _) = getSuit a == getSuit b && getSuit b == getSuit c &&
-                                   getSuit c == getSuit d && getSuit d == getSuit e
   
 contiguousValues :: [Card] -> Bool
 contiguousValues xs | length uniqValues < 5 = False

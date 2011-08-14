@@ -1,9 +1,10 @@
 module Hand (
     Hand(..), -- TODO eliminate the destructuring and hence the need for ..
-    mkHand
+    mkHand,
+    allSameSuit
   ) where
 
-import Card (Card,getValue)
+import Card (Card,getValue,getSuit)
 
 import Data.List (sortBy,groupBy)
 import Data.Ord (comparing)
@@ -19,3 +20,7 @@ mkHand (a,b,c,d,e) = Hand (a',b',c',d',e') gc
 
 groupedValues :: [Card] -> [[Card]]
 groupedValues cards = sortBy (comparing length) $ groupBy (\x y -> getValue x == getValue y) cards
+
+allSameSuit :: Hand -> Bool
+allSameSuit (Hand (a,b,c,d,e) _) = getSuit a == getSuit b && getSuit b == getSuit c &&
+                                   getSuit c == getSuit d && getSuit d == getSuit e
