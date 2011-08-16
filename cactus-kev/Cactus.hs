@@ -26,7 +26,7 @@ mkCard :: Rank -> Suit -> Card
 mkCard r s = Card (mkCardWord64 r s)
                
 mkCardWord64 :: Rank -> Suit -> Word32
-mkCardWord64 r s =  (p .|. byte2 .|. byte34) 
+mkCardWord64 r s =  p .|. byte2 .|. byte34
   where
     cdhs = suit s
     rrrr = cardRank r
