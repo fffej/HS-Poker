@@ -1,4 +1,9 @@
-module Cactus where
+module Card ( 
+  Card,
+  mkCard,
+  Rank(..),
+  Suit(..)
+  )where
 
 import Data.Word
 import Data.Bits
@@ -30,7 +35,7 @@ mkCardWord64 r s =  p .|. byte2 .|. byte34
   where
     cdhs = suit s
     rrrr = cardRank r
-    byte2 = cdhs .|. rrrr
+    byte2 = shiftL (cdhs .|. rrrr) 8
     p = primeRank r
     b = cardBit r
     byte34 = shiftL b 16
