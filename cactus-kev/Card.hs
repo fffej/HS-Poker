@@ -1,5 +1,5 @@
 module Card ( 
-  Card,
+  Card(..),
   mkCard,
   Rank(..),
   Suit(..)
@@ -14,7 +14,7 @@ data Rank = Two | Three | Four | Five | Six | Seven
                    
 data Suit = Heart | Diamond | Club | Spade deriving (Enum,Ord,Eq,Show)
 
-newtype Card = Card Word32
+newtype Card = Card Word32 deriving Eq
                    
                
 {-
