@@ -1,6 +1,29 @@
-module Lookup where
+module Lookup (
+    lookupFlushes,
+    lookupUnique5,
+    lookupProducts,
+    lookupValues
+  ) where
 
 import Data.Word (Word16)
+import qualified Data.Vector.Unboxed as V
+
+type VWord16 = V.Vector Word16
+type VInt = V.Vector Int
+
+
+lookupFlushes :: Int -> Word16
+lookupFlushes n = flushes V.! n
+
+lookupUnique5 :: Int -> Word16
+lookupUnique5 n = unique5 V.! n
+
+lookupProducts :: Int -> Int
+lookupProducts n = products V.! n
+
+lookupValues :: Int -> Word16
+lookupValues n = values V.! n
+
 --
 -- This is a table lookup for all "flush" hands (e.g.  both
 -- flushes and straight-flushes.  entries containing a zero
@@ -8,8 +31,8 @@ import Data.Word (Word16)
 -- flush hand.
 --
 -- TODO better representation, list isn't ideal for lookups!!!!
-flushes :: [Word16]
-flushes = [
+flushes :: VWord16
+flushes = V.fromList [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 1599, 0, 0, 0, 0, 0, 0, 0, 1598, 0, 0, 0, 1597, 0, 1596,
@@ -431,9 +454,8 @@ flushes = [
 -- of five unique ranks (i.e.  either Straights or High Card
 -- hands).  it's similar to the above "flushes" array.
 --
--- TODO Better structure for lookup!
-unique5 :: [Word16]
-unique5 = [
+unique5 :: VWord16 
+unique5 = V.fromList [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 1608, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 7462, 0, 0, 0, 0, 0, 0, 0, 7461, 0, 0,  0,  7460,  0,
@@ -859,9 +881,8 @@ unique5 = [
 
 -- Unique prime products
 -- 
--- TODO Better structure to look things up from!
-products :: [Int]
-products = [
+products :: VInt
+products = V.fromList [
   48, 72, 80, 108, 112, 120, 162, 168, 176,  180,  200,  208,  252,
   264,  270, 272, 280, 300, 304, 312, 368, 378, 392, 396, 405, 408,
   420, 440, 450, 456, 464, 468, 496, 500, 520, 552, 567, 588,  592,
@@ -1490,9 +1511,8 @@ products = [
 
 -- Lookup hand score from here
 -- 
--- TODO Better data structure
-values :: [Word16]
-values = [
+values :: VWord16
+values = V.fromList [
   166, 322, 165, 310, 164, 2467, 154, 2466, 163,  3325,  321,  162,
   3324,  2464,  2401,  161,  2465, 3314, 160, 2461, 159, 2400, 320,
   3323, 153, 2457, 6185, 2463, 3303, 2452,  158,  3322,  157,  298,
