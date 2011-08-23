@@ -9,12 +9,18 @@ import Data.List
 import Data.Maybe
 import qualified Data.Vector as V
 
+import Control.Monad.Random
+import RandomList
+
 type CardVector = V.Vector Card
 
 data Deck = Deck CardVector deriving Show
 
 getCard :: Deck -> Int -> Card
 getCard (Deck xs) n = xs V.! n
+
+getCards :: Deck -> [Card]
+getCards (Deck v) = V.toList v
 
 data BestHand = StraightFlush Value -- highest card
               | FourOfAKind Value Value -- four of a kind, plus kicker
@@ -127,7 +133,25 @@ getBestHand hand
       groupedValues = getGroupedValues hand
 
 createOrderedDeck :: Deck
-createOrderedDeck = Deck $ V.fromList [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
+createOrderedDeck = Deck $ V.fromList $ createListOfCards
+
+createListOfCards :: [Card]
+createListOfCards = [Card suit value | suit <- [Hearts,Diamonds,Spades,Clubs], value <- enumFromTo Two Ace]
+
+getPermutation :: Int -> IO [Int]
+getPermutation n = do
+        let l = permute [1..n]
+        o <- evalRandIO l
+        return o
+
+getShuffledDeck :: [Int] -> Deck
+getShuffledDeck l = Deck $ V.fromList $ getShuffledDeck' l []
+            where
+              getShuffledDeck' :: [Int] -> [Card] -> [Card]
+              getShuffledDeck' [] c = c
+              getShuffledDeck' (n:ns) c = getShuffledDeck' ns ((cards V.! (n - 1)):c)
+              cards = V.fromList createListOfCards
+
 
 analyseDeck :: Deck -> [(Int,Int,Int,Int,Int)] -> [(Hand,BestHand)]
 analyseDeck d = map (getFiveCardsHand d) 
@@ -137,4 +161,13 @@ getFiveCardsHand dk (a,b,c,d,e) = (cards,getBestHand cards)
   where
     cards = mkHand (a',b',c',d',e')
     [a',b',c',d',e']  = map (getCard dk) [a,b,c,d,e]
-  
+
+listToFiveTuple :: [a] -> (a,a,a,a,a)
+listToFiveTuple (a:b:c:d:e:xs) = (a,b,c,d,e)
+
+test :: IO ()
+test = do
+        let p = getPermutation 52
+        list <- p
+        let deck = getShuffledDeck list
+        print $ getBestHand $ mkHand $ listToFiveTuple $ take 5 $ getCards deck
