@@ -1,13 +1,9 @@
 module Main (main) where
 
-import Card
 import CardDeck (Deck,createOrderedDeck,getCard)
 import Hand
 import Choose
 import SimpleEvaluator
-
-import Data.Ord (comparing)
-import Data.List (maximumBy)
 
 import Data.Map (Map)
 import qualified Data.Map as M
@@ -34,16 +30,6 @@ insertCategory handCounts (_, bestHand) = M.insertWith' (+) category 1 handCount
   where
     category = getCategory bestHand
 
-createCards :: [Card] -> (Int,Int,Int,Int,Int) -> Hand
-createCards x (a,b,c,d,e)= mkHand (x !! a, x !! b, x !! c, x !! d, x !! e)
-  
-getBestHandFromCards :: [Card] -> Maybe Hand
-getBestHandFromCards cards
-  | cardCount < 5 = Nothing
-  | otherwise = Just $ maximumBy (comparing (score . getBestHand)) (map (createCards cards . zeroBase) (combinations 5 cardCount))
-    where
-      cardCount = length cards
-
 zeroBase :: [Int] -> (Int,Int,Int,Int,Int)
 zeroBase [a,b,c,d,e] = (a-1,b-1,c-1,d-1,e-1)
 zeroBase _ = error "Only works with lists of size 5"
@@ -57,13 +43,10 @@ getFiveCardsHand dk (a,b,c,d,e) = (cards,getBestHand cards)
     cards = mkHand (a',b',c',d',e')
     [a',b',c',d',e']  = map (getCard dk) [a,b,c,d,e]
 
-listToFiveTuple :: [a] -> (a,a,a,a,a)
-listToFiveTuple (a:b:c:d:e:xs) = (a,b,c,d,e)
-
 main :: IO ()
 main = do
   let d = createOrderedDeck
-      bestHands = analyseDeck d (map zeroBase $ combinations 5 52)
+      bestHands = analyseDeck d (map zeroBase $ combinations (5 :: Int) 52)
       categories = foldl insertCategory M.empty bestHands
   
   print categories

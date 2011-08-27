@@ -42,7 +42,7 @@ getSuit (Card c)
   | testBit c 14 = Diamond
   | testBit c 13 = Heart
   | testBit c 12 = Spade
-  | otherwise = error ("Invalid card." ++ (show c))
+  | otherwise = error ("Invalid card." ++ show c)
 
 mkCard :: Rank -> Suit -> Card
 mkCard r s = Card (mkCardWord64 r s)

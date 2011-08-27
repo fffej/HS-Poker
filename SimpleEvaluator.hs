@@ -2,12 +2,10 @@ module SimpleEvaluator where
 
 import Card
 import Hand
-import CardDeck (Deck)
 
 import Data.Ord (comparing)
 
 import Data.List
-import Data.Maybe
 
 data BestHand = StraightFlush Rank -- highest card
               | FourOfAKind Rank Rank -- four of a kind, plus kicker
@@ -23,23 +21,40 @@ data BestHand = StraightFlush Rank -- highest card
 instance Ord BestHand where
   compare = comparing score
 
+maxHighCard :: Int
 maxHighCard = score (HighCard Ace Ace Ace Ace Ace)
+
+maxOnePair :: Int
 maxOnePair = score (OnePair Ace Ace Ace Ace)
+
+maxTwoPairs :: Int
 maxTwoPairs = score (TwoPairs Ace Ace Ace)
+
+maxThreeOfAKind :: Int
 maxThreeOfAKind = score (ThreeOfAKind Ace Ace Ace)
+
+maxStraight :: Int
 maxStraight = score (Straight Ace)
+
+maxFlush :: Int
 maxFlush = score (Flush Ace Ace Ace Ace Ace)
+
+maxFullHouse :: Int
 maxFullHouse = score (FullHouse Ace Ace)
+
+maxFourOfAKind :: Int
 maxFourOfAKind = score (FourOfAKind Ace Ace)
+
+maxStraightFlush :: Int
 maxStraightFlush = score (StraightFlush Ace)
 
 score :: BestHand -> Int
-score (HighCard a b c d e) = fromEnum a * (12 ^ 4) + fromEnum b * (12 ^ 3) + fromEnum c * (12 ^ 2)  + fromEnum d * 12 + fromEnum e
-score (OnePair a b c d) = maxHighCard + (fromEnum a * 12^3) + (fromEnum b * 12^2) + (fromEnum c * 12) + fromEnum d
-score (TwoPairs a b c) = maxOnePair + (fromEnum a * 12^2) + (fromEnum b * 12) + fromEnum c
-score (ThreeOfAKind a b c) = maxTwoPairs + (fromEnum a * 12^2) + (fromEnum b * 12) + fromEnum c
-score (Straight a) = maxThreeOfAKind + (fromEnum a)
-score (Flush a b c d e) = maxStraight + fromEnum a * (12 ^ 4) + fromEnum b * (12 ^ 3) + fromEnum c * (12 ^ 2)  + fromEnum d * 12 + fromEnum e
+score (HighCard a b c d e) = fromEnum a * 20736 + fromEnum b * 1728 + fromEnum c * 144 + fromEnum d * 12 + fromEnum e
+score (OnePair a b c d) = maxHighCard + (fromEnum a * 1728) + (fromEnum b * 144) + (fromEnum c * 12) + fromEnum d
+score (TwoPairs a b c) = maxOnePair + (fromEnum a * 144) + (fromEnum b * 12) + fromEnum c
+score (ThreeOfAKind a b c) = maxTwoPairs + (fromEnum a * 144) + (fromEnum b * 12) + fromEnum c
+score (Straight a) = maxThreeOfAKind + fromEnum a
+score (Flush a b c d e) = maxStraight + fromEnum a * 20736 + fromEnum b * 1728 + fromEnum c * 144 + fromEnum d * 12 + fromEnum e
 score (FullHouse a b) = maxFlush + fromEnum a * 12 + fromEnum b
 score (FourOfAKind a b) = maxFullHouse + fromEnum a * 12 + fromEnum b
 score (StraightFlush a) = maxFourOfAKind + fromEnum a
@@ -86,7 +101,7 @@ mkThreeOfAKind groupedRanks = ThreeOfAKind threeRank maxKickerVal minKickerVal
     (minKickerVal:maxKickerVal:[]) = sort (head (head groupedRanks) : head (tail groupedRanks))
                                          
 isTwoPairs :: GroupedRanks -> Bool
-isTwoPairs groupedRanks = (length groupedRanks) == 3  && length (last groupedRanks) == 2 
+isTwoPairs groupedRanks = length groupedRanks == 3  && length (last groupedRanks) == 2 
 
 mkTwoPairs :: GroupedRanks -> BestHand
 mkTwoPairs groupedRanks = TwoPairs highPair lowPair kicker
