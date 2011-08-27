@@ -1,56 +1,56 @@
 module Hand (
     Hand(..), -- TODO eliminate the destructuring and hence the need for ..
-    GroupedValues,
+    GroupedRanks,
     mkHand,
     allSameSuit,
-    contiguousValues,
-    maxValueInStraight,
-    getGroupedValues
+    contiguousRanks,
+    maxRankInStraight,
+    getGroupedRanks
   ) where
 
-import Card (Card,getValue,getSuit,Value(..))
+import Card (Card,getRank,getSuit,Rank(..))
 
 import Data.List (sortBy,group)
 import Data.Ord (comparing)
 
 data Hand = Hand (Card,Card,Card,Card,Card) deriving Show
 
-type GroupedValues = [[Value]]
+type GroupedRanks = [[Rank]]
 
 mkHand :: (Card,Card,Card,Card,Card) -> Hand
 mkHand (a,b,c,d,e) = Hand (a',b',c',d',e') 
   where
-    [a',b',c',d',e'] = sortBy (comparing getValue) [a,b,c,d,e]
+    [a',b',c',d',e'] = sortBy (comparing getRank) [a,b,c,d,e]
 
-getGroupedValues :: Hand -> GroupedValues
-getGroupedValues (Hand (a,b,c,d,e)) = sortBy (comparing length) $ group values
+getGroupedRanks :: Hand -> GroupedRanks
+getGroupedRanks (Hand (a,b,c,d,e)) = sortBy (comparing length) $ group values
   where
-    values = map getValue [a,b,c,d,e]
+    values = map getRank [a,b,c,d,e]
 
 allSameSuit :: Hand -> Bool
 allSameSuit (Hand (a,b,c,d,e)) = getSuit a == getSuit b && getSuit b == getSuit c &&
                                  getSuit c == getSuit d && getSuit d == getSuit e
 
-contiguousValues :: Hand -> Bool
-contiguousValues (Hand (a,b,c,d,e)) 
+contiguousRanks :: Hand -> Bool
+contiguousRanks (Hand (a,b,c,d,e)) 
   | not (a' /= b' && b' /= c' && c'/=d' && d'/=e') = False
   | (a' == Two && e' == Ace) && firstFourCardsContiguous = True
   | otherwise = firstFourCardsContiguous && d' /= Ace && succ d' == e'
     where
-      a' = getValue a
-      b' = getValue b
-      c' = getValue c
-      d' = getValue d
-      e' = getValue e
+      a' = getRank a
+      b' = getRank b
+      c' = getRank c
+      d' = getRank d
+      e' = getRank e
       firstFourCardsContiguous = succ a' == b' && succ b' == c' && succ c' == d'
   
 -- Assumed that it is already a straight!
-maxValueInStraight :: Hand -> Value      
-maxValueInStraight (Hand (a,_,_,_,e)) 
+maxRankInStraight :: Hand -> Rank      
+maxRankInStraight (Hand (a,_,_,_,e)) 
   | e' == Ace && a' == Two = Five
   | otherwise = e'
     where
-      a' = getValue a
-      e' = getValue e
+      a' = getRank a
+      e' = getRank e
 
      

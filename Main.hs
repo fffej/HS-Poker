@@ -1,4 +1,4 @@
-module DeckAnalysis (main) where
+module Main (main) where
 
 import Card
 import Deck

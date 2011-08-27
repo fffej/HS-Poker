@@ -1,4 +1,4 @@
-module Hand where
+module Evaluate where
 
 import Card
 import Data.Bits
