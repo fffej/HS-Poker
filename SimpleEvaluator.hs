@@ -68,16 +68,16 @@ mkStraightFlush hand = StraightFlush v
     (Straight v) = mkStraight hand
 
 isFourOfAKind :: GroupedRanks -> Bool
-isFourOfAKind groupedRanks = length groupedRanks == 2 && length (head groupedRanks) == 1
+isFourOfAKind groupedRanks = groupSize groupedRanks == 2 && biggestGroup groupedRanks == 4
 
 mkFourOfAKind :: GroupedRanks -> BestHand
-mkFourOfAKind groupedRanks = FourOfAKind (head $ last groupedRanks) (head $ head groupedRanks)
+mkFourOfAKind groupedRanks = FourOfAKind (biggestValue groupedRanks) (secondBiggestValue groupedRanks)
 
 isFullHouse :: GroupedRanks -> Bool
-isFullHouse groupedRanks = length groupedRanks == 2 && length (head groupedRanks) == 2 
+isFullHouse groupedRanks = groupSize groupedRanks == 2 && biggestGroup groupedRanks == 3
 
 mkFullHouse :: GroupedRanks -> BestHand
-mkFullHouse groupedRanks = FullHouse (head $ last groupedRanks) (head $ head groupedRanks)
+mkFullHouse groupedRanks = FullHouse (biggestValue groupedRanks) (secondBiggestValue groupedRanks)
   
 isFlush :: Hand -> Bool
 isFlush = allSameSuit    
@@ -92,30 +92,22 @@ mkStraight :: Hand -> BestHand
 mkStraight hand = Straight (maxRankInStraight hand)
 
 isThreeOfAKind :: GroupedRanks -> Bool
-isThreeOfAKind groupedRanks = length groupedRanks == 3 && length (last groupedRanks) == 3
+isThreeOfAKind groupedRanks = groupSize groupedRanks == 3 && isThreeTwoGroup groupedRanks
 
 mkThreeOfAKind :: GroupedRanks -> BestHand
-mkThreeOfAKind groupedRanks = ThreeOfAKind threeRank maxKickerVal minKickerVal
-  where
-    threeRank = head (last groupedRanks)
-    (minKickerVal:maxKickerVal:[]) = sort (head (head groupedRanks) : head (tail groupedRanks))
+mkThreeOfAKind groupedRanks = ThreeOfAKind (biggestValue groupedRanks) (secondBiggestValue groupedRanks) (thirdBiggestValue groupedRanks)
                                          
 isTwoPairs :: GroupedRanks -> Bool
-isTwoPairs groupedRanks = length groupedRanks == 3  && length (last groupedRanks) == 2 
+isTwoPairs groupedRanks = groupSize groupedRanks == 3 && isTwoTwoOneGroup groupedRanks
 
 mkTwoPairs :: GroupedRanks -> BestHand
-mkTwoPairs groupedRanks = TwoPairs highPair lowPair kicker
-  where
-    [kicker,lowPair,highPair] = map head groupedRanks                                     
+mkTwoPairs groupedRanks = TwoPairs (biggestValue groupedRanks) (secondBiggestValue groupedRanks) (thirdBiggestValue groupedRanks)
                                      
 isOnePair :: GroupedRanks -> Bool
-isOnePair groupedRanks = length groupedRanks == 4 && length (last groupedRanks) == 2
+isOnePair groupedRanks = groupSize groupedRanks == 4 && isTwoOneOneOneGroup groupedRanks
 
 mkOnePair :: GroupedRanks -> BestHand
-mkOnePair groupedRanks = OnePair maxRank k3 k2 k1
-  where
-    (k1:k2:k3:[]) = map head (init groupedRanks)
-    maxRank = head (last groupedRanks)
+mkOnePair groupedRanks = OnePair (biggestValue groupedRanks) (secondBiggestValue groupedRanks) (thirdBiggestValue groupedRanks) (smallestValue groupedRanks)
 
 mkHighCard :: Hand -> BestHand
 mkHighCard (Hand (a,b,c,d,e)) = HighCard (getRank e) (getRank d) (getRank c) (getRank b) (getRank a)

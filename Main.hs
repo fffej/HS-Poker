@@ -30,10 +30,6 @@ insertCategory handCounts (_, bestHand) = M.insertWith' (+) category 1 handCount
   where
     category = getCategory bestHand
 
-zeroBase :: [Int] -> (Int,Int,Int,Int,Int)
-zeroBase [a,b,c,d,e] = (a-1,b-1,c-1,d-1,e-1)
-zeroBase _ = error "Only works with lists of size 5"
-
 analyseDeck :: Deck -> [(Int,Int,Int,Int,Int)] -> [(Hand,BestHand)]
 analyseDeck d = map (getFiveCardsHand d) 
 
@@ -46,7 +42,7 @@ getFiveCardsHand dk (a,b,c,d,e) = (cards,getBestHand cards)
 main :: IO ()
 main = do
   let d = createOrderedDeck
-      bestHands = analyseDeck d (map zeroBase $ combinations (5 :: Int) 52)
+      bestHands = analyseDeck d (combinations (5 :: Int) 52)
       categories = foldl insertCategory M.empty bestHands
   
   print categories
