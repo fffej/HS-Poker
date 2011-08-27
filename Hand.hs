@@ -1,3 +1,8 @@
+{-
+  A hand is a collection of 5 cards.
+
+  This file also includes the functions supporting the most naive way of ranking hands
+-}
 module Hand (
     Hand(..), -- TODO eliminate the destructuring and hence the need for ..
     GroupedRanks,

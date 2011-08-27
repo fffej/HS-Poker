@@ -1,26 +1,13 @@
-module Deck where
+module SimpleEvaluator where
 
 import Card
 import Hand
+import CardDeck (Deck)
 
 import Data.Ord (comparing)
 
 import Data.List
 import Data.Maybe
-import qualified Data.Vector as V
-
-import Control.Monad.Random
-import RandomList
-
-type CardVector = V.Vector Card
-
-data Deck = Deck CardVector deriving Show
-
-getCard :: Deck -> Int -> Card
-getCard (Deck xs) n = xs V.! n
-
-getCards :: Deck -> [Card]
-getCards (Deck v) = V.toList v
 
 data BestHand = StraightFlush Rank -- highest card
               | FourOfAKind Rank Rank -- four of a kind, plus kicker
@@ -131,43 +118,3 @@ getBestHand hand
   | otherwise = mkHighCard hand
     where
       groupedRanks = getGroupedRanks hand
-
-createOrderedDeck :: Deck
-createOrderedDeck = Deck $ V.fromList $ createListOfCards
-
-createListOfCards :: [Card]
-createListOfCards = [mkCard r s | r <- [Two .. Ace], s <- [Heart .. Spade]]
-
-getPermutation :: Int -> IO [Int]
-getPermutation n = do
-        let l = permute [1..n]
-        o <- evalRandIO l
-        return o
-
-getShuffledDeck :: [Int] -> Deck
-getShuffledDeck l = Deck $ V.fromList $ getShuffledDeck' l []
-            where
-              getShuffledDeck' :: [Int] -> [Card] -> [Card]
-              getShuffledDeck' [] c = c
-              getShuffledDeck' (n:ns) c = getShuffledDeck' ns ((cards V.! (n - 1)):c)
-              cards = V.fromList createListOfCards
-
-
-analyseDeck :: Deck -> [(Int,Int,Int,Int,Int)] -> [(Hand,BestHand)]
-analyseDeck d = map (getFiveCardsHand d) 
-
-getFiveCardsHand :: Deck -> (Int,Int,Int,Int,Int) -> (Hand,BestHand)
-getFiveCardsHand dk (a,b,c,d,e) = (cards,getBestHand cards)
-  where
-    cards = mkHand (a',b',c',d',e')
-    [a',b',c',d',e']  = map (getCard dk) [a,b,c,d,e]
-
-listToFiveTuple :: [a] -> (a,a,a,a,a)
-listToFiveTuple (a:b:c:d:e:xs) = (a,b,c,d,e)
-
-test :: IO ()
-test = do
-        let p = getPermutation 52
-        list <- p
-        let deck = getShuffledDeck list
-        print $ getBestHand $ mkHand $ listToFiveTuple $ take 5 $ getCards deck
