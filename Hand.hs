@@ -18,19 +18,24 @@ import Card (Card,getRank,getSuit,Rank(..))
 import Data.List (sortBy,group)
 import Data.Ord (comparing)
 
+import TupleSort (tuple5SortBy)
+
 data Hand = Hand (Card,Card,Card,Card,Card) deriving Show
 
 type GroupedRanks = [[Rank]]
 
 mkHand :: (Card,Card,Card,Card,Card) -> Hand
-mkHand (a,b,c,d,e) = Hand (a',b',c',d',e') 
+mkHand x = Hand y
   where
-    [a',b',c',d',e'] = sortBy (comparing getRank) [a,b,c,d,e]
+    y = tuple5SortBy (comparing getRank) x
+--    [a',b',c',d',e'] = sortBy (comparing getRank) [a,b,c,d,e]
 
 getGroupedRanks :: Hand -> GroupedRanks
 getGroupedRanks (Hand (a,b,c,d,e)) = sortBy (comparing length) $ group values
   where
     values = map getRank [a,b,c,d,e]
+    
+    
 
 allSameSuit :: Hand -> Bool
 allSameSuit (Hand (a,b,c,d,e)) = getSuit a == getSuit b && getSuit b == getSuit c &&
