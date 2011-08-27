@@ -50,11 +50,11 @@ Executable HS-Poker
   Main-is: Main.hs
   
   -- Packages needed in order to build this package.
-  Build-depends: base, containers, MonadRandom, vector
+  Build-depends: base, containers, vector
   
   -- Modules not exported by this package.
   -- Other-modules:       
   
   -- Extra tools (e.g. alex, hsc2hs, ...) needed to build the source.
   -- Build-tools:         
-  
+  ghc-prof-options: -rtsopts -auto-all -caf-all -prof
