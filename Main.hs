@@ -39,10 +39,13 @@ getFiveCardsHand dk (a,b,c,d,e) = (cards,getBestHand cards)
     cards = mkHand (a',b',c',d',e')
     [a',b',c',d',e']  = map (getCard dk) [a,b,c,d,e]
 
+tupleUp [a,b,c,d,e] = (a,b,c,d,e)
+tupleUp _ = error "Only works with lists of size 5"
+
 main :: IO ()
 main = do
   let d = createOrderedDeck
-      bestHands = analyseDeck d (combinations (5 :: Int) 52)
+      bestHands = analyseDeck d (map tupleUp $ combinations (5 :: Int) 52)
       categories = foldl insertCategory M.empty bestHands
   
   print categories
