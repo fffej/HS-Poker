@@ -1,27 +1,33 @@
 module Lookup (
     lookupFlushes,
     lookupUnique5,
-    lookupProducts,
-    lookupValues
+    getValueFromProduct
   ) where
 
 import Data.Word (Word16)
 import qualified Data.Vector.Unboxed as V
 
+import Data.Maybe (fromJust)
+
 type VWord16 = V.Vector Word16
 type VInt = V.Vector Int
 
+-- TODO this is a very poor implementation
+getValueFromProduct :: Int -> Int
+getValueFromProduct product = lookupValues index
+  where
+    index = fromJust $ V.findIndex (== product) products
 
-lookupFlushes :: Int -> Word16
+lookupFlushes :: Int -> Int
 lookupFlushes n = flushes V.! n
 
-lookupUnique5 :: Int -> Word16
+lookupUnique5 :: Int -> Int
 lookupUnique5 n = unique5 V.! n
 
 lookupProducts :: Int -> Int
 lookupProducts n = products V.! n
 
-lookupValues :: Int -> Word16
+lookupValues :: Int -> Int
 lookupValues n = values V.! n
 
 --
@@ -30,8 +36,7 @@ lookupValues n = values V.! n
 -- mean that combination is not possible with a five-card
 -- flush hand.
 --
--- TODO better representation, list isn't ideal for lookups!!!!
-flushes :: VWord16
+flushes :: VInt
 flushes = V.fromList [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -454,7 +459,7 @@ flushes = V.fromList [
 -- of five unique ranks (i.e.  either Straights or High Card
 -- hands).  it's similar to the above "flushes" array.
 --
-unique5 :: VWord16 
+unique5 :: VInt 
 unique5 = V.fromList [
   0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   0, 0, 0, 0, 0, 0, 0, 0, 0, 1608, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -1511,7 +1516,7 @@ products = V.fromList [
 
 -- Lookup hand score from here
 -- 
-values :: VWord16
+values :: VInt
 values = V.fromList [
   166, 322, 165, 310, 164, 2467, 154, 2466, 163,  3325,  321,  162,
   3324,  2464,  2401,  161,  2465, 3314, 160, 2461, 159, 2400, 320,
