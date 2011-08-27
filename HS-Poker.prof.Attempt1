@@ -1,0 +1,165 @@
+	Sat Aug 27 21:00 2011 Time and Allocation Profiling Report  (Final)
+
+	   HS-Poker +RTS -p -RTS
+
+	total time  =       30.20 secs   (1510 ticks @ 20 ms)
+	total alloc = 11,710,913,680 bytes  (excludes profiling overheads)
+
+COST CENTRE                    MODULE               %time %alloc
+
+getGroupedRanks                Hand                  25.7   37.2
+mkHand                         Hand                  18.9   16.7
+insertCategory                 Main                   7.2    5.8
+combinationsOf                 Choose                 7.0   11.8
+getBestHand                    SimpleEvaluator        5.4    1.2
+getFiveCardsHand               Main                   5.3    9.6
+zeroBase                       Main                   4.9    5.5
+getRank                        Card                   4.8    0.0
+main                           Main                   2.6    3.0
+getSuit                        Card                   2.3    0.0
+analyseDeck                    Main                   1.9    2.5
+contiguousRanks                Hand                   1.8    0.5
+isOnePair                      SimpleEvaluator        1.7    0.0
+getCard                        CardDeck               1.6    1.8
+allSameSuit                    Hand                   1.5    0.0
+isThreeOfAKind                 SimpleEvaluator        1.5    0.0
+isFlush                        SimpleEvaluator        1.5    0.4
+mkOnePair                      SimpleEvaluator        0.3    1.5
+mkHighCard                     SimpleEvaluator        0.3    1.9
+
+
+                                                                                               individual    inherited
+COST CENTRE              MODULE                                               no.    entries  %time %alloc   %time %alloc
+
+MAIN                     MAIN                                                   1           0   0.0    0.0   100.0  100.0
+ main                    Main                                                 524           1   0.0    0.0     0.0    0.0
+ CAF:main3               Main                                                 518           1   0.0    0.0     0.0    0.0
+ CAF:main4               Main                                                 517           1   0.0    0.0     0.0    0.0
+  main                   Main                                                 526           0   0.0    0.0     0.0    0.0
+ CAF:main5               Main                                                 516           1   0.0    0.0     8.1    5.8
+  main                   Main                                                 527           0   0.7    0.0     8.1    5.8
+   insertCategory        Main                                                 541     2598960   7.2    5.8     7.4    5.8
+    getCategory          Main                                                 542     2598960   0.2    0.0     0.2    0.0
+ CAF:main6               Main                                                 515           1   0.0    0.0    78.2   73.8
+  main                   Main                                                 528           0   0.1    0.0    78.2   73.8
+   analyseDeck           Main                                                 529           1   1.9    2.5    78.1   73.8
+    getFiveCardsHand     Main                                                 540     2598960   5.3    9.6    76.2   71.3
+     getCard             CardDeck                                             553    12994800   1.6    1.8     1.6    1.8
+     getBestHand         SimpleEvaluator                                      544     2598960   5.4    1.2    48.6   43.3
+      mkHighCard         SimpleEvaluator                                      606     1302540   0.3    1.9     0.3    1.9
+      mkFlush            SimpleEvaluator                                      605        5108   0.0    0.0     0.0    0.0
+      mkStraight         SimpleEvaluator                                      604       10200   0.0    0.0     0.0    0.0
+      mkStraightFlush    SimpleEvaluator                                      603          40   0.0    0.0     0.0    0.0
+      mkOnePair          SimpleEvaluator                                      599     1098240   0.3    1.5     0.3    1.5
+      isOnePair          SimpleEvaluator                                      598     2400780   1.7    0.0     1.7    0.0
+      mkTwoPairs         SimpleEvaluator                                      597      123552   0.0    0.1     0.0    0.1
+      isTwoPairs         SimpleEvaluator                                      596     2524332   0.9    0.0     0.9    0.0
+      mkThreeOfAKind     SimpleEvaluator                                      595       54912   0.1    0.1     0.1    0.1
+      isThreeOfAKind     SimpleEvaluator                                      594     2579244   1.5    0.0     1.5    0.0
+      isStraight         SimpleEvaluator                                      591     2589444   0.7    0.4     3.6    0.9
+       contiguousRanks   Hand                                                 592     2589444   1.8    0.5     2.8    0.5
+        getRank          Card                                                 593    10860564   1.1    0.0     1.1    0.0
+      isFlush            SimpleEvaluator                                      588     2594552   1.5    0.4     2.9    0.4
+       allSameSuit       Hand                                                 589     2594552   0.5    0.0     1.5    0.0
+        getSuit          Card                                                 590     6559130   0.9    0.0     0.9    0.0
+      mkFullHouse        SimpleEvaluator                                      587        3744   0.0    0.0     0.0    0.0
+      isFullHouse        SimpleEvaluator                                      586     2598296   0.8    0.0     0.8    0.0
+      mkFourOfAKind      SimpleEvaluator                                      573         624   0.0    0.0     0.0    0.0
+      getGroupedRanks    Hand                                                 570     2598920  25.7   37.2    27.6   37.2
+       getRank           Card                                                 572    12994600   1.9    0.0     1.9    0.0
+      isFourOfAKind      SimpleEvaluator                                      569     2598920   0.5    0.0     0.5    0.0
+      isStraightFlush    SimpleEvaluator                                      545     2598960   0.9    0.0     3.1    0.0
+       isStraight        SimpleEvaluator                                      600        5148   0.0    0.0     0.0    0.0
+        contiguousRanks  Hand                                                 601        5148   0.0    0.0     0.0    0.0
+         getRank         Card                                                 602       25740   0.0    0.0     0.0    0.0
+       allSameSuit       Hand                                                 567     2598960   0.9    0.0     2.3    0.0
+        getSuit          Card                                                 568     6568302   1.3    0.0     1.3    0.0
+     mkHand              Hand                                                 543     2598960  18.9   16.7    20.7   16.7
+      getRank            Card                                                 574    20791672   1.9    0.0     1.9    0.0
+ CAF:main7               Main                                                 514           1   0.0    0.0     6.7    8.5
+  main                   Main                                                 530           1   1.8    3.0     6.7    8.5
+   zeroBase              Main                                                 539     2598960   4.9    5.5     4.9    5.5
+ CAF:$fShowCategory9     Main                                                 513           1   0.0    0.0     0.0    0.0
+ CAF:$fShowCategory8     Main                                                 512           1   0.0    0.0     0.0    0.0
+ CAF:$fShowCategory7     Main                                                 511           1   0.0    0.0     0.0    0.0
+ CAF:$fShowCategory6     Main                                                 510           1   0.0    0.0     0.0    0.0
+ CAF:$fShowCategory5     Main                                                 509           1   0.0    0.0     0.0    0.0
+ CAF:$fShowCategory4     Main                                                 508           1   0.0    0.0     0.0    0.0
+ CAF:$fShowCategory3     Main                                                 507           1   0.0    0.0     0.0    0.0
+ CAF:$fShowCategory2     Main                                                 506           1   0.0    0.0     0.0    0.0
+ CAF:$fShowCategory1     Main                                                 505           1   0.0    0.0     0.0    0.0
+ CAF:main8               Main                                                 501           1   0.0    0.0     0.0    0.0
+  main                   Main                                                 531           0   0.0    0.0     0.0    0.0
+   combinations          Choose                                               532           1   0.0    0.0     0.0    0.0
+ CAF:main9               Main                                                 500           1   0.0    0.0     0.0    0.0
+  main                   Main                                                 536           0   0.0    0.0     0.0    0.0
+   combinations          Choose                                               537           0   0.0    0.0     0.0    0.0
+ CAF:main12              Main                                                 499           1   0.0    0.0     7.0   11.8
+  main                   Main                                                 533           0   0.0    0.0     7.0   11.8
+   combinations          Choose                                               534           0   0.0    0.0     7.0   11.8
+    combinationsOf       Choose                                               535          53   7.0   11.8     7.0   11.8
+ CAF                     GHC.IO.Handle.FD                                     436           2   0.0    0.0     0.0    0.0
+ CAF                     System.Posix.Internals                               435           1   0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Handle.Internals                              400           1   0.0    0.0     0.0    0.0
+ CAF                     GHC.IO.Encoding.Iconv                                394           2   0.0    0.0     0.0    0.0
+ CAF                     GHC.Conc.Signal                                      391           1   0.0    0.0     0.0    0.0
+ CAF:$fShowCard5         Card                                                 326           1   0.0    0.0     0.0    0.0
+  getRank                Card                                                 563           0   0.0    0.0     0.0    0.0
+ CAF:lvl36_r18r          Card                                                 325           1   0.0    0.0     0.0    0.0
+  suit                   Card                                                 558           0   0.0    0.0     0.0    0.0
+ CAF:lvl34_r18n          Card                                                 324           1   0.0    0.0     0.0    0.0
+  suit                   Card                                                 561           0   0.0    0.0     0.0    0.0
+ CAF:lvl32_r18j          Card                                                 323           1   0.0    0.0     0.0    0.0
+  suit                   Card                                                 564           0   0.0    0.0     0.0    0.0
+ CAF:lvl30_r18f          Card                                                 322           1   0.0    0.0     0.0    0.0
+  suit                   Card                                                 565           0   0.0    0.0     0.0    0.0
+ CAF:lvl28_r18b          Card                                                 321           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 556           0   0.0    0.0     0.0    0.0
+ CAF:lvl26_r187          Card                                                 320           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 566           0   0.0    0.0     0.0    0.0
+ CAF:lvl24_r183          Card                                                 319           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 575           0   0.0    0.0     0.0    0.0
+ CAF:lvl22_r17Z          Card                                                 318           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 576           0   0.0    0.0     0.0    0.0
+ CAF:lvl20_r17V          Card                                                 317           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 577           0   0.0    0.0     0.0    0.0
+ CAF:lvl18_r17R          Card                                                 316           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 578           0   0.0    0.0     0.0    0.0
+ CAF:lvl16_r17N          Card                                                 315           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 579           0   0.0    0.0     0.0    0.0
+ CAF:lvl14_r17J          Card                                                 314           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 580           0   0.0    0.0     0.0    0.0
+ CAF:lvl12_r17F          Card                                                 313           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 581           0   0.0    0.0     0.0    0.0
+ CAF:lvl10_r17B          Card                                                 312           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 582           0   0.0    0.0     0.0    0.0
+ CAF:lvl8_r17x           Card                                                 311           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 583           0   0.0    0.0     0.0    0.0
+ CAF:lvl6_r17t           Card                                                 310           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 584           0   0.0    0.0     0.0    0.0
+ CAF:lvl4_r17p           Card                                                 309           1   0.0    0.0     0.0    0.0
+  primeRank              Card                                                 585           0   0.0    0.0     0.0    0.0
+ CAF:mkHand2             Hand                                                 304           1   0.0    0.0     0.0    0.0
+  mkHand                 Hand                                                 546           0   0.0    0.0     0.0    0.0
+   getRank               Card                                                 562           8   0.0    0.0     0.0    0.0
+ CAF:getGroupedRanks1    Hand                                                 302           1   0.0    0.0     0.0    0.0
+  getGroupedRanks        Hand                                                 571           0   0.0    0.0     0.0    0.0
+ CAF:lvl_r84L            Choose                                               300           1   0.0    0.0     0.0    0.0
+  combinationsOf         Choose                                               538           0   0.0    0.0     0.0    0.0
+ CAF:createOrderedDeck   CardDeck                                             299           1   0.0    0.0     0.0    0.0
+  createOrderedDeck      CardDeck                                             547           1   0.0    0.0     0.0    0.0
+ CAF:createOrderedDeck1  CardDeck                                             298           1   0.0    0.0     0.0    0.0
+  createOrderedDeck      CardDeck                                             548           0   0.0    0.0     0.0    0.0
+ CAF:createListOfCards   CardDeck                                             297           1   0.0    0.0     0.0    0.0
+  createListOfCards      CardDeck                                             549           1   0.0    0.0     0.0    0.0
+   mkCard                Card                                                 552          52   0.0    0.0     0.0    0.0
+    mkCardWord64         Card                                                 554          52   0.0    0.0     0.0    0.0
+     cardBit             Card                                                 560         104   0.0    0.0     0.0    0.0
+     cardRank            Card                                                 559          52   0.0    0.0     0.0    0.0
+     suit                Card                                                 557          52   0.0    0.0     0.0    0.0
+     primeRank           Card                                                 555          52   0.0    0.0     0.0    0.0
+ CAF:lvl2_rgMM           CardDeck                                             295           1   0.0    0.0     0.0    0.0
+  createListOfCards      CardDeck                                             551           0   0.0    0.0     0.0    0.0
+ CAF:createOrderedDeck3  CardDeck                                             294           1   0.0    0.0     0.0    0.0
+  createListOfCards      CardDeck                                             550           0   0.0    0.0     0.0    0.0
+ CAF                     Data.Map                                             270           1   0.0    0.0     0.0    0.0
