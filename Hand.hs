@@ -29,7 +29,7 @@ import TupleSort (tuple5SortBy)
 
 data Hand = Hand (Card,Card,Card,Card,Card) deriving Show
 
-data Category = CStraightFlush | CFourAKind | CFullHouse | CFlush
+data Category = CStraightFlush | CFourOfAKind | CFullHouse | CFlush
               | CStraight | CThreeOfAKind | CTwoPairs | COnePair
               | CHighCard deriving (Eq,Ord,Show)
 

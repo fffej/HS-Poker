@@ -1,8 +1,12 @@
-module SimpleEvaluator where
+module SimpleEvaluator (
+  NaiveEvaluator(..),
+  naiveEvaluator
+  ) where
 
 import Card (Rank(..),getRank)
 import Hand (
   Hand(..),
+  Category(..),
   GroupedRanks,
   biggestValue,
   secondBiggestValue,
@@ -18,8 +22,31 @@ import Hand (
   smallestValue,
   getGroupedRanks
   )
+import HandEvaluator(Evaluator(..))
+import Data.Ord (comparing)  
 
-import Data.Ord (comparing)
+-- TODO something about this doesn't seem right!
+data NaiveEvaluator = NaiveEvaluator  
+  
+-- The "red-neck" naive evaluator
+naiveEvaluator :: NaiveEvaluator
+naiveEvaluator = NaiveEvaluator
+
+instance Evaluator NaiveEvaluator where
+  scoreHand _ hand = score $ getBestHand hand
+  getCategory _ hand = handCategory $ getBestHand hand
+    where
+      handCategory :: BestHand -> Category
+      handCategory (StraightFlush _) = CStraightFlush
+      handCategory (FourOfAKind _ _) = CFourOfAKind
+      handCategory (FullHouse _ _) = CFullHouse
+      handCategory (Flush _ _ _ _ _) = CFlush
+      handCategory (Straight _) = CStraight
+      handCategory (ThreeOfAKind _ _ _) = CThreeOfAKind
+      handCategory (TwoPairs _ _ _) = CTwoPairs
+      handCategory (OnePair _ _ _ _) = COnePair
+      handCategory (HighCard _ _ _ _ _) = CHighCard
+
 
 data BestHand = StraightFlush Rank -- highest card
               | FourOfAKind Rank Rank -- four of a kind, plus kicker
@@ -31,6 +58,8 @@ data BestHand = StraightFlush Rank -- highest card
               | OnePair Rank Rank Rank Rank -- one pair, 3 kickers
               | HighCard Rank Rank Rank Rank Rank
                 deriving (Show,Eq)  
+                         
+-- Translate a best hand to a human readable category
 
 instance Ord BestHand where
   compare = comparing score
