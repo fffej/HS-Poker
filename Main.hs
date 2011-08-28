@@ -1,7 +1,7 @@
 module Main (main) where
 
 import CardDeck (Deck,createOrderedDeck,getCard)
-import Hand
+import Hand (Category(..),Hand(..),mkHand)
 import Choose
 import SimpleEvaluator
 
@@ -9,10 +9,6 @@ import Data.Map (Map)
 import qualified Data.Map as M
 
 type HandCounts = Map Category Int
-
-data Category = CStraightFlush | CFourAKind | CFullHouse | CFlush
-              | CStraight | CThreeOfAKind | CTwoPairs | COnePair
-              | CHighCard deriving (Eq,Ord,Show)
 
 getCategory :: BestHand -> Category
 getCategory (StraightFlush _) = CStraightFlush
@@ -39,6 +35,7 @@ getFiveCardsHand dk (a,b,c,d,e) = (cards,getBestHand cards)
     cards = mkHand (a',b',c',d',e')
     [a',b',c',d',e']  = map (getCard dk) [a,b,c,d,e]
 
+tupleUp :: [a] -> (a,a,a,a,a)
 tupleUp [a,b,c,d,e] = (a,b,c,d,e)
 tupleUp _ = error "Only works with lists of size 5"
 

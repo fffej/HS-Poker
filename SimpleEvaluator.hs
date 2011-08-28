@@ -1,11 +1,25 @@
 module SimpleEvaluator where
 
-import Card
-import Hand
+import Card (Rank(..),getRank)
+import Hand (
+  Hand(..),
+  GroupedRanks,
+  biggestValue,
+  secondBiggestValue,
+  thirdBiggestValue,
+  isThreeTwoGroup,
+  isTwoTwoOneGroup,
+  isTwoOneOneOneGroup,
+  allSameSuit,
+  groupSize,
+  biggestGroup,
+  contiguousRanks,
+  maxRankInStraight,
+  smallestValue,
+  getGroupedRanks
+  )
 
 import Data.Ord (comparing)
-
-import Data.List
 
 data BestHand = StraightFlush Rank -- highest card
               | FourOfAKind Rank Rank -- four of a kind, plus kicker

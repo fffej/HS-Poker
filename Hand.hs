@@ -4,7 +4,8 @@
   This file also includes the functions supporting the most naive way of ranking hands
 -}
 module Hand (
-    Hand(..), -- TODO eliminate the destructuring and hence the need for ..
+    Hand(..), -- TODO eliminate the destructuring and hence the need for .
+    Category(..),
     GroupedRanks,
     biggestGroup,
     biggestValue,
@@ -23,13 +24,14 @@ module Hand (
   ) where
 
 import Card (Card,getRank,getSuit,Rank(..))
-
-import Data.List (sortBy,group)
 import Data.Ord (comparing)
-
 import TupleSort (tuple5SortBy)
 
 data Hand = Hand (Card,Card,Card,Card,Card) deriving Show
+
+data Category = CStraightFlush | CFourAKind | CFullHouse | CFlush
+              | CStraight | CThreeOfAKind | CTwoPairs | COnePair
+              | CHighCard deriving (Eq,Ord,Show)
 
 mkHand :: (Card,Card,Card,Card,Card) -> Hand
 mkHand x = Hand y
