@@ -11,11 +11,14 @@ import Lookup (lookupFlushes, lookupUnique5, getValueFromProduct)
 -- Should perhaps keep the lookup tables in here?  Again, something not right
 data CactusKev = CactusKev
 
-cactusKev :: CactusKev
-cactusKev = CactusKev
+cactusKevEvaluator :: CactusKev
+cactusKevEvaluator = CactusKev
+
+maxScore :: Int
+maxScore = 10000
 
 instance Evaluator CactusKev where
-  scoreHand _ hand = evaluate hand
+  scoreHand _ hand = maxScore - evaluate hand
   getCategory _ hand = (handRankFrom . evaluate) hand
 
 -- |A hand consists of five cards
@@ -34,11 +37,11 @@ handRankFrom x
 -- |Hands evaluate to a score, higher score = better
 evaluate :: Hand -> Int
 evaluate (Hand ((Card a),(Card b),(Card c),(Card d),(Card e)))
-  | isFlush = lookupFlushes q 
+  | isFlush =  lookupFlushes q 
   | isHighCardHand /= 0 = isHighCardHand
   | otherwise = getValueFromProduct combinedPrimes
     where
-      isFlush = 0 /= a .&. b .&. c .&. d .&. e .&. 0xF00
+      isFlush = 0 /= a .&. b .&. c .&. d .&. e .&. 0xF000
       -- This is the index for flushes and high card hands
       q = fromEnum ((a .|. b .|. c .|. d .|. e) `shiftR` 16 ) -- TODO eliminate fromEnum
       -- This is a very big number, we need to find the index within products and then lookup in values

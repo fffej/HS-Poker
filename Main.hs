@@ -6,7 +6,7 @@ import Hand (Category(..),Hand(..),mkHand)
 import Choose (combinations)
 
 import SimpleEvaluator (NaiveEvaluator(..), naiveEvaluator)
-import CactusKevEvaluator (CactusKev(..), cactusKev)
+import CactusKevEvaluator (CactusKev(..), cactusKevEvaluator)
 import HandEvaluator (Evaluator(..))
 
 import Data.Map (Map)
@@ -30,7 +30,7 @@ main = do
   let d = createOrderedDeck
       cards = map (mkHand . tupleUp d) $ combinations (5 :: Int) 52
       naiveCategories = getCategories naiveEvaluator cards
-      cactusKevCategories = getCategories cactusKev cards
+      cactusKevCategories = getCategories cactusKevEvaluator cards
   
   print naiveCategories
   print cactusKevCategories

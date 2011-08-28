@@ -12,6 +12,7 @@ import Hand (
   secondBiggestValue,
   thirdBiggestValue,
   isThreeTwoGroup,
+  isThreeOneOneGroup,
   isTwoTwoOneGroup,
   isTwoOneOneOneGroup,
   allSameSuit,
@@ -135,7 +136,7 @@ mkStraight :: Hand -> BestHand
 mkStraight hand = Straight (maxRankInStraight hand)
 
 isThreeOfAKind :: GroupedRanks -> Bool
-isThreeOfAKind groupedRanks = groupSize groupedRanks == 3 && isThreeTwoGroup groupedRanks
+isThreeOfAKind groupedRanks = groupSize groupedRanks == 3 && isThreeOneOneGroup groupedRanks
 
 mkThreeOfAKind :: GroupedRanks -> BestHand
 mkThreeOfAKind groupedRanks = ThreeOfAKind (biggestValue groupedRanks) (secondBiggestValue groupedRanks) (thirdBiggestValue groupedRanks)
