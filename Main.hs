@@ -28,7 +28,7 @@ getCategories ev hands = foldl' insertCategory M.empty (map (getCategory ev) han
 main :: IO ()
 main = do
   let d = createOrderedDeck
-      cards = map (mkHand . tupleUp d) $ combinations (5 :: Int) 52
+      cards = take 10000 $ map (mkHand . tupleUp d) $ combinations (5 :: Int) 52
       naiveCategories = getCategories naiveEvaluator cards
       cactusKevCategories = getCategories cactusKevEvaluator cards
   

@@ -6,7 +6,7 @@ import HandEvaluator (Evaluator(..))
 import Hand (Hand(..), Category(..))
 import Card (Card(..))
 import Data.Bits ((.&.),(.|.),shiftR)
-import Lookup (lookupFlushes, lookupUnique5, getValueFromProduct)
+import LookupNaive (lookupFlushes, lookupUnique5, getValueFromProduct)
 
 -- Should perhaps keep the lookup tables in here?  Again, something not right
 data CactusKev = CactusKev

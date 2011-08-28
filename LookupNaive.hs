@@ -1,4 +1,4 @@
-module Lookup (
+module LookupNaive (
     lookupFlushes,
     lookupUnique5,
     getValueFromProduct
