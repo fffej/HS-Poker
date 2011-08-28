@@ -140,12 +140,6 @@ getGroupedRanks (Hand (a',b',c',d',e'))
       d = getRank d'
       e = getRank e'      
 
-{-getGroupedRanks :: Hand -> GroupedRanks
-getGroupedRanks (Hand (a,b,c,d,e)) = sortBy (comparing length) $ group values
-  where
-    values = map getRank [a,b,c,d,e]
--}    
-
 allSameSuit :: Hand -> Bool
 allSameSuit (Hand (a,b,c,d,e)) = getSuit a == getSuit b && getSuit b == getSuit c &&
                                  getSuit c == getSuit d && getSuit d == getSuit e
