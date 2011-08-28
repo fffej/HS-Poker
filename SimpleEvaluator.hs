@@ -21,8 +21,10 @@ import Hand (
   contiguousRanks,
   maxRankInStraight,
   smallestValue,
-  getGroupedRanks
+  getGroupedRanks,
+  sortHand
   )
+  
 import HandEvaluator(Evaluator(..))
 import Data.Ord (comparing)  
 
@@ -34,8 +36,8 @@ naiveEvaluator :: NaiveEvaluator
 naiveEvaluator = NaiveEvaluator
 
 instance Evaluator NaiveEvaluator where
-  scoreHand _ hand = score $ getBestHand hand
-  getCategory _ hand = handCategory $ getBestHand hand
+  scoreHand _ hand = score $ getBestHand (sortHand hand)
+  getCategory _ hand = handCategory $ getBestHand (sortHand hand)
     where
       handCategory :: BestHand -> Category
       handCategory (StraightFlush _) = CStraightFlush

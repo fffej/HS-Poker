@@ -18,6 +18,7 @@ module Hand (
     isThreeOneOneGroup,
     groupSize,
     mkHand,
+    sortHand,
     allSameSuit,
     contiguousRanks,
     maxRankInStraight,
@@ -34,11 +35,14 @@ data Category = CStraightFlush | CFourOfAKind | CFullHouse | CFlush
               | CStraight | CThreeOfAKind | CTwoPairs | COnePair
               | CHighCard deriving (Eq,Ord,Show)
 
-mkHand :: (Card,Card,Card,Card,Card) -> Hand
-mkHand x = Hand y
+sortHand :: Hand -> Hand
+sortHand (Hand x) = Hand y
   where
     y = tuple5SortBy (comparing getRank) x
-    
+
+mkHand :: (Card,Card,Card,Card,Card) -> Hand
+mkHand x = Hand x    
+
 data GroupedRanks = FourOneGroup Rank Rank    
                   | ThreeTwoGroup Rank Rank
                   | ThreeOneOneGroup Rank Rank Rank
@@ -125,9 +129,9 @@ getGroupedRanks (Hand (a',b',c',d',e'))
   | allEqual3 a b c && d /= e = ThreeOneOneGroup a e d
   | allEqual3 b c d && a /= e = ThreeOneOneGroup b e a
   | allEqual3 c d e && a /= b = ThreeOneOneGroup c b a
-  | a == b && c == d = TwoTwoOneGroup a c e
-  | a == b && d == e = TwoTwoOneGroup a d c
-  | b == c && d == e = TwoTwoOneGroup b d a
+  | a == b && c == d = TwoTwoOneGroup c a e
+  | a == b && d == e = TwoTwoOneGroup d a c
+  | b == c && d == e = TwoTwoOneGroup d b a
   | a == b = TwoOneOneOneGroup a e d c
   | b == c = TwoOneOneOneGroup b e d a
   | c == d = TwoOneOneOneGroup c e b a
